@@ -1,0 +1,1 @@
+http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
