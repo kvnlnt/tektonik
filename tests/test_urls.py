@@ -1,9 +1,9 @@
 #! ../env/bin/python
 # -*- coding: utf-8 -*-
 import json
+import unittest
 from tektonik import create_app
-from tektonik.models import db
-
+from tektonik.models import db, Property
 
 
 class TestURLs:
@@ -17,7 +17,17 @@ class TestURLs:
         db.session.remove()
         db.drop_all()
 
-    def test_properties(self):
+    def test_properties_post(self):
+        headers = [('Content-Type', 'application/json')]
+        data = '{"property":"testing.com"}'
+        response = self.app.post('/properties', data=data, headers=headers)
+        assert response.status_code == 200
+
+    def test_properties_get(self):
+
+        record = Property(property="test property")
+        db.session.add(record)
+        db.session.commit()
         response = self.app.get('/properties')
         data = json.loads(response.data)
         assert data.get('data') != None
