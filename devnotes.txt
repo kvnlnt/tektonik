@@ -1,1 +1,8 @@
 http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
+
+testing:
+- test for json schema
+- test for partial updates
+- test for updates to resources that don't exist
+- test where delete for does exist
+- test for dups

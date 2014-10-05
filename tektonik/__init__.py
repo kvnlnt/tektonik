@@ -3,7 +3,9 @@ import os
 
 from flask import Flask
 from tektonik.models import db
-from tektonik.controller import main
+from tektonik.property import controller as property
+from tektonik.path import controller as path
+from tektonik.page import controller as page
 
 def create_app(object_name, env="prod"):
     """
@@ -26,7 +28,9 @@ def create_app(object_name, env="prod"):
     db.init_app(app)
 
     # register our blueprints
-    app.register_blueprint(main)
+    app.register_blueprint(property)
+    app.register_blueprint(path)
+    app.register_blueprint(page)
 
     return app
 
