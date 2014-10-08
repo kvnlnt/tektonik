@@ -22,12 +22,6 @@ class Path(db.Model):
     path = db.Column(db.String(100))
     property_id = db.Column(db.Integer, db.ForeignKey('properties.id'))
 
-    def serialize(self):
-        return {
-            'id': self.id,
-            'path' : self.path,
-            'property_id' : self.property_id
-        }
 
 class Page(db.Model):
 

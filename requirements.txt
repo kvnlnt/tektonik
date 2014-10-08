@@ -4,3 +4,4 @@ Flask-Script==2.0.5
 SQLAlchemy==0.9.6
 pytest==2.6.0
 Werkzeug==0.9.6
+-e git://github.com/kvnlnt/flask-restful.git#egg=flask_restful

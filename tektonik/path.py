@@ -1,54 +1,122 @@
-from flask import jsonify, Blueprint, request, redirect, url_for
-from validate import validate_json
-from tektonik.models import db, Path
+from flask import Blueprint
+from flask.ext.restful import abort
+from flask.ext.restful import Api
+from flask.ext.restful import reqparse
+from flask.ext.restful import fields
+from flask.ext.restful import marshal_with
+from flask.ext.restful import Resource
+from tektonik.models import db
+from tektonik.models import Path as PathModel
+
+# CONTROLLER
+# ==========
 
 controller = Blueprint('path', __name__)
+api = Api(controller)
+
+# PARSER
+# ======
+
+# base parser
+parser = reqparse.RequestParser()
+parser.add_argument('id',
+                    type=int,
+                    location='json',
+                    help='Invalid ID')
+parser.add_argument('path',
+                    type=str,
+                    location='json',
+                    help='Invalid Path')
+parser.add_argument('property_id',
+                    type=int,
+                    location='json',
+                    help='Invalid Property ID')
+parser.add_argument('offset',
+                    type=int,
+                    location='args')
+parser.add_argument('limit',
+                    type=int,
+                    location='args')
+
+# we need to require the property id for individual put records
+pathParser = parser.copy()
+pathParser.replace_argument('property_id',
+                            type=int,
+                            location='json',
+                            help='Invalid Property ID',
+                            required=True)
+
+# FIELDS
+# ======
+
+path_fields = {
+    'id': fields.Integer,
+    'path': fields.String,
+    'property_id': fields.Integer,
+}
+
+# RESOURCES
+# =========
 
 
-# GET       curl http://127.0.0.1:5000/properties
-# POST      curl -i -H "Content-Type: application/json" -X POST -d '{"path":"/home", "property_id":1}' http://127.0.0.1:5000/paths
-# DELETE    curl -i -H "Content-Type: application/json" -X DELETE -d '{"path":1}' http://127.0.0.1:5000/paths
-@controller.route('/paths', methods=['GET','POST','DELETE'])
-@validate_json
-def properties():
+class Paths(Resource):
 
-    if request.method == 'GET':
-        paths = Path.query.all()
-        data = [i.serialize() for i in paths]
-        payload = jsonify(data=data, result='OK') if data else jsonify([])
-        return payload
-
-    if request.method == 'POST':
-        record = Path(path=request.json['path'], property_id=request.json['property_id'])
+    @marshal_with(path_fields)
+    def post(self):
+        args = parser.parse_args()
+        record = PathModel(path=args.path, property_id=args.property_id)
         db.session.add(record)
         db.session.commit()
-        payload = jsonify(record.serialize(), result="OK") if record else jsonify([])
-        return payload
+        return record, 201
 
-    if request.method == 'DELETE':
-        id = request.json['path']
-        record = Path.query.get(id)
-        db.session.delete(record)
-        db.session.commit()
-        payload = jsonify(data=[], result="DELETED")
-        return payload
+    @marshal_with(path_fields)
+    def get(self):
+        records = PathModel.query.all()
+        return records, 200
 
 
-# GET       curl http://127.0.0.1:5000/path/1
-# PUT       curl -i -H "Content-Type: application/json" -X PUT -d '{"path":"/newpath", "property_id":1}' http://127.0.0.1:5000/path/1
-@controller.route('/path/<int:id>', methods=['GET','PUT'])
-@validate_json
-def property_read_update_delete(id):
+class Path(Resource):
 
-    if request.method == 'GET':
-        record  = Path.query.get(id)
-        payload = jsonify(record.serialize(), result="OK") if record else jsonify([])
-        return payload
+    @marshal_with(path_fields)
+    def get(self, id):
+        try:
+            record = PathModel.query.get(id)
+            if record:
+                return record, 200
+            else:
+                raise LookupError("Record Not Found")
+        except LookupError as e:
+            abort(404, message=str(e))
 
-    if request.method == 'PUT':
-        record = Path.query.get(id)
-        record.path = request.json['path']
-        record.property_id = request.json['property_id']
-        db.session.commit()
-        payload = jsonify(record.serialize(), result="OK") if record else jsonify([])
-        return payload
+    @marshal_with(path_fields)
+    def put(self, id):
+        try:
+            args = pathParser.parse_args()
+            record = PathModel.query.get(id)
+            if record:
+                record.path = args.path
+                record.property_id = args.property_id
+                db.session.commit()
+                return record, 200
+            else:
+                raise LookupError("Record Not Found")
+        except LookupError as e:
+            abort(404, message=str(e))
+
+    def delete(self, id):
+        try:
+            record = PathModel.query.get(id)
+            if record:
+                db.session.delete(record)
+                db.session.commit()
+                return '', 204
+            else:
+                raise LookupError("Record Not Found")
+        except LookupError as e:
+            abort(404, message=str(e))
+
+# ENDPOINTS
+# =========
+
+api.add_resource(Paths, '/paths', endpoint='paths')
+api.add_resource(Path, '/paths/<int:id>', endpoint='path')

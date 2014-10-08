@@ -15,6 +15,10 @@ Endpoint testing:
 # DELETE    curl -i -H "Content-Type: application/json" -X DELETE -d '{"id":14}' http://127.0.0.1:5000/properties
 
 
+curl -i -H "Content-Type: application/json" -X DELETE -d http://127.0.0.1:5000/paths/14
+
+checkout RequestParser
+http://blog.miguelgrinberg.com/post/designing-a-restful-api-using-flask-restful
 
 200 – OK – Eyerything is working
 201 – OK – New resource has been created
