@@ -19,8 +19,8 @@ api = Api(controller)
 
 # base parser
 parser = reqparse.RequestParser()
-parser.add_argument('id', type=int, help='Invalid ID')
-parser.add_argument('page', type=str, help='Invalid Page')
+parser.add_argument('id', type=int)
+parser.add_argument('page', type=str)
 parser.add_argument('offset', type=int)
 parser.add_argument('limit', type=int)
 

@@ -19,9 +19,9 @@ api = Api(controller)
 
 # base parser
 parser = reqparse.RequestParser()
-parser.add_argument('id', type=int, help='Invalid ID')
-parser.add_argument('path', type=str, help='Invalid Path')
-parser.add_argument('property_id', type=int, help='Invalid Property ID')
+parser.add_argument('id', type=int)
+parser.add_argument('path', type=str)
+parser.add_argument('property_id', type=int)
 parser.add_argument('offset', type=int)
 parser.add_argument('limit', type=int)
 

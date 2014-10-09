@@ -20,7 +20,7 @@ def make_shell_context():
         in the context of the app
     """
 
-    return dict(app=app, 
+    return dict(app=app,
                 db=db,
                 Property=Property,
                 Path=Path)
@@ -33,6 +33,16 @@ def createdb():
     """
 
     db.create_all()
+
+
+@manager.command
+def recreatedb():
+    """ Creates a database with all of the tables defined in
+        your Alchemy models
+    """
+    db.drop_all()
+    db.create_all()
+
 
 if __name__ == "__main__":
     manager.run()

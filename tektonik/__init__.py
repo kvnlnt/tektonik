@@ -6,6 +6,7 @@ from tektonik.models import db
 from tektonik.property import controller as property
 from tektonik.path import controller as path
 from tektonik.page import controller as page
+from tektonik.path_page import controller as path_page
 
 
 def create_app(object_name, env="prod"):
@@ -32,6 +33,7 @@ def create_app(object_name, env="prod"):
     app.register_blueprint(property)
     app.register_blueprint(path)
     app.register_blueprint(page)
+    app.register_blueprint(path_page)
 
     return app
 
