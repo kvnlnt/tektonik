@@ -7,6 +7,7 @@ from tektonik.property import controller as property
 from tektonik.path import controller as path
 from tektonik.page import controller as page
 
+
 def create_app(object_name, env="prod"):
     """
     An flask application factory, as explained here:

@@ -19,37 +19,23 @@ api = Api(controller)
 
 # base parser
 parser = reqparse.RequestParser()
-parser.add_argument('id',
-                    type=int,
-                    location='json',
-                    help='Invalid ID')
-parser.add_argument('path',
-                    type=str,
-                    location='json',
-                    help='Invalid Path')
-parser.add_argument('property_id',
-                    type=int,
-                    location='json',
-                    help='Invalid Property ID')
-parser.add_argument('offset',
-                    type=int,
-                    location='args')
-parser.add_argument('limit',
-                    type=int,
-                    location='args')
+parser.add_argument('id', type=int, help='Invalid ID')
+parser.add_argument('path', type=str, help='Invalid Path')
+parser.add_argument('property_id', type=int, help='Invalid Property ID')
+parser.add_argument('offset', type=int)
+parser.add_argument('limit', type=int)
 
 # we need to require the property id for individual put records
 pathParser = parser.copy()
 pathParser.replace_argument('property_id',
                             type=int,
-                            location='json',
                             help='Invalid Property ID',
                             required=True)
 
 # FIELDS
 # ======
 
-path_fields = {
+fields = {
     'id': fields.Integer,
     'path': fields.String,
     'property_id': fields.Integer,
@@ -61,7 +47,7 @@ path_fields = {
 
 class Paths(Resource):
 
-    @marshal_with(path_fields)
+    @marshal_with(fields)
     def post(self):
         args = parser.parse_args()
         record = PathModel(path=args.path, property_id=args.property_id)
@@ -69,7 +55,7 @@ class Paths(Resource):
         db.session.commit()
         return record, 201
 
-    @marshal_with(path_fields)
+    @marshal_with(fields)
     def get(self):
         records = PathModel.query.all()
         return records, 200
@@ -77,43 +63,34 @@ class Paths(Resource):
 
 class Path(Resource):
 
-    @marshal_with(path_fields)
+    @marshal_with(fields)
     def get(self, id):
-        try:
-            record = PathModel.query.get(id)
-            if record:
-                return record, 200
-            else:
-                raise LookupError("Record Not Found")
-        except LookupError as e:
-            abort(404, message=str(e))
+        record = PathModel.query.get(id)
+        if record:
+            return record, 200
+        else:
+            abort(404, message="Record Not Found")
 
-    @marshal_with(path_fields)
+    @marshal_with(fields)
     def put(self, id):
-        try:
-            args = pathParser.parse_args()
-            record = PathModel.query.get(id)
-            if record:
-                record.path = args.path
-                record.property_id = args.property_id
-                db.session.commit()
-                return record, 200
-            else:
-                raise LookupError("Record Not Found")
-        except LookupError as e:
-            abort(404, message=str(e))
+        args = pathParser.parse_args()
+        record = PathModel.query.get(id)
+        if record:
+            record.path = args.path
+            record.property_id = args.property_id
+            db.session.commit()
+            return record, 200
+        else:
+            abort(404, message="Record Not Found")
 
     def delete(self, id):
-        try:
-            record = PathModel.query.get(id)
-            if record:
-                db.session.delete(record)
-                db.session.commit()
-                return '', 204
-            else:
-                raise LookupError("Record Not Found")
-        except LookupError as e:
-            abort(404, message=str(e))
+        record = PathModel.query.get(id)
+        if record:
+            db.session.delete(record)
+            db.session.commit()
+            return '', 204
+        else:
+            abort(404, message="Record Not Found")
 
 # ENDPOINTS
 # =========

@@ -1,55 +1,90 @@
-from flask import jsonify, Blueprint, request, redirect, url_for
-from validate import validate_json
-from tektonik.models import db, Page
+from flask import Blueprint
+from flask.ext.restful import abort
+from flask.ext.restful import Api
+from flask.ext.restful import reqparse
+from flask.ext.restful import fields
+from flask.ext.restful import marshal_with
+from flask.ext.restful import Resource
+from tektonik.models import db
+from tektonik.models import Page as PageModel
+
+# CONTROLLER
+# ==========
 
 controller = Blueprint('page', __name__)
+api = Api(controller)
+
+# PARSER
+# ======
+
+# base parser
+parser = reqparse.RequestParser()
+parser.add_argument('id', type=int, help='Invalid ID')
+parser.add_argument('page', type=str, help='Invalid Page')
+parser.add_argument('offset', type=int)
+parser.add_argument('limit', type=int)
 
 
-# GET       curl http://127.0.0.1:5000/pages
-# POST      curl -i -H "Content-Type: application/json" -X POST -d '{"page":"home", "page_id":1}' http://127.0.0.1:5000/pages
-# DELETE    curl -i -H "Content-Type: application/json" -X DELETE -d '{"page":1}' http://127.0.0.1:5000/pages
-@controller.route('/pages', methods=['GET','POST','DELETE'])
-@validate_json
-def page():
+# FIELDS
+# ======
 
-    if request.method == 'GET':
-        pages = Page.query.all()
-        data = [i.serialize() for i in pages]
-        payload = jsonify(data=data, result='OK') if data else jsonify([])
-        return payload
+fields = {
+    'id': fields.Integer,
+    'page': fields.String,
+}
 
-    if request.method == 'POST':
-        record = Page(page=request.json['page'])
+# RESOURCES
+# =========
+
+
+class Pages(Resource):
+
+    @marshal_with(fields)
+    def post(self):
+        args = parser.parse_args()
+        record = PageModel(page=args.page)
         db.session.add(record)
         db.session.commit()
-        payload = jsonify(record.serialize(), result="OK") if record else jsonify([])
-        return payload
+        return record, 201
 
-    if request.method == 'DELETE':
-        id = request.json['page']
-        record = Page.query.get(id)
-        db.session.delete(record)
-        db.session.commit()
-        payload = jsonify(data=[], result="DELETED")
-        return payload
+    @marshal_with(fields)
+    def get(self):
+        records = PageModel.query.all()
+        return records, 200
 
 
-# GET       curl http://127.0.0.1:5000/page/1
-# PUT       curl -i -H "Content-Type: application/json" -X PUT -d '{"page":"home update"}' http://127.0.0.1:5000/page/1
-@controller.route('/page/<int:id>', methods=['GET','PUT'])
-@validate_json
-def page_read_update_delete(id):
+class Page(Resource):
 
-    if request.method == 'GET':
-        record  = Page.query.get(id)
-        payload = jsonify(record.serialize(), result="OK") if record else jsonify([])
-        return payload
+    @marshal_with(fields)
+    def get(self, id):
+        record = PageModel.query.get(id)
+        if record:
+            return record, 200
+        else:
+            abort(404, message="Record Not Found")
 
-    if request.method == 'PUT':
-        record = Page.query.get(id)
-        record.page = request.json['page']
-        db.session.commit()
-        payload = jsonify(record.serialize(), result="OK") if record else jsonify([])
-        return payload
+    @marshal_with(fields)
+    def put(self, id):
+        args = parser.parse_args()
+        record = PageModel.query.get(id)
+        if record:
+            record.page = args.page
+            db.session.commit()
+            return record, 200
+        else:
+            abort(404, message="Record Not Found")
 
+    def delete(self, id):
+        record = PageModel.query.get(id)
+        if record:
+            db.session.delete(record)
+            db.session.commit()
+            return '', 204
+        else:
+            abort(404, message="Record Not Found")
 
+# ENDPOINTS
+# =========
+
+api.add_resource(Pages, '/pages', endpoint='pages')
+api.add_resource(Page, '/pages/<int:id>', endpoint='page')
