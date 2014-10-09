@@ -30,7 +30,7 @@ parser.add_argument('expiration_date', type=dt, default=None)
 # FIELDS
 # ======
 
-fields = {
+path_page_fields = {
     'id': fields.Integer,
     'path_id': fields.Integer,
     'page_id': fields.Integer,
@@ -44,7 +44,7 @@ fields = {
 
 class PathPages(Resource):
 
-    @marshal_with(fields)
+    @marshal_with(path_page_fields)
     def post(self):
         args = parser.parse_args()
         record = PathPageModel(
@@ -57,7 +57,7 @@ class PathPages(Resource):
         db.session.commit()
         return record, 201
 
-    @marshal_with(fields)
+    @marshal_with(path_page_fields)
     def get(self):
         records = PathPageModel.query.all()
         return records, 200
@@ -65,7 +65,7 @@ class PathPages(Resource):
 
 class PathPage(Resource):
 
-    @marshal_with(fields)
+    @marshal_with(path_page_fields)
     def get(self, id):
         record = PathPageModel.query.get(id)
         if record:
@@ -73,7 +73,7 @@ class PathPage(Resource):
         else:
             abort(404, message="Record Not Found")
 
-    @marshal_with(fields)
+    @marshal_with(path_page_fields)
     def put(self, id):
         args = parser.parse_args()
         record = PathPageModel.query.get(id)

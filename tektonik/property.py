@@ -28,7 +28,7 @@ parser.add_argument('limit', type=int)
 # FIELDS
 # ======
 
-fields = {
+property_fields = {
     'id': fields.Integer,
     'property': fields.String,
 }
@@ -39,7 +39,7 @@ fields = {
 
 class Properties(Resource):
 
-    @marshal_with(fields)
+    @marshal_with(property_fields)
     def post(self):
         args = parser.parse_args()
         record = PropertyModel(property=args.property)
@@ -47,7 +47,7 @@ class Properties(Resource):
         db.session.commit()
         return record, 201
 
-    @marshal_with(fields)
+    @marshal_with(property_fields)
     def get(self):
         records = PropertyModel.query.all()
         return records, 200
@@ -55,7 +55,7 @@ class Properties(Resource):
 
 class Property(Resource):
 
-    @marshal_with(fields)
+    @marshal_with(property_fields)
     def get(self, id):
         record = PropertyModel.query.get(id)
         if record:
@@ -63,7 +63,7 @@ class Property(Resource):
         else:
             abort(404, message="Record Not Found")
 
-    @marshal_with(fields)
+    @marshal_with(property_fields)
     def put(self, id):
         args = parser.parse_args()
         record = PropertyModel.query.get(id)

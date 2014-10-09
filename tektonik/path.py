@@ -7,6 +7,7 @@ from flask.ext.restful import marshal_with
 from flask.ext.restful import Resource
 from tektonik.models import db
 from tektonik.models import Path as PathModel
+from tektonik.models import PathPage as PathPageModel
 
 # CONTROLLER
 # ==========
@@ -17,28 +18,40 @@ api = Api(controller)
 # PARSER
 # ======
 
+
+def page_validation(value, name):
+    return value
+
+
 # base parser
 parser = reqparse.RequestParser()
 parser.add_argument('id', type=int)
-parser.add_argument('path', type=str)
+parser.add_argument('path', type=str, default="/")
 parser.add_argument('property_id', type=int)
+parser.add_argument('pages', type=page_validation, default=[])
 parser.add_argument('offset', type=int)
 parser.add_argument('limit', type=int)
 
 # we need to require the property id for individual put records
 pathParser = parser.copy()
-pathParser.replace_argument('property_id',
-                            type=int,
-                            help='Invalid Property ID',
-                            required=True)
+pathParser.replace_argument('property_id', type=int, required=True)
 
 # FIELDS
 # ======
 
-fields = {
+page_fields = {
+    'id': fields.String,
+    'path_id': fields.Integer,
+    'page_id': fields.Integer,
+    'effective_date': fields.DateTime,
+    'expiration_date': fields.DateTime
+}
+
+path_fields = {
     'id': fields.Integer,
     'path': fields.String,
     'property_id': fields.Integer,
+    'pages': fields.List(fields.Nested(page_fields))
 }
 
 # RESOURCES
@@ -47,15 +60,24 @@ fields = {
 
 class Paths(Resource):
 
-    @marshal_with(fields)
+    @marshal_with(path_fields)
     def post(self):
         args = parser.parse_args()
-        record = PathModel(path=args.path, property_id=args.property_id)
-        db.session.add(record)
-        db.session.commit()
-        return record, 201
 
-    @marshal_with(fields)
+        # create new path
+        path = PathModel(path=args.path, property_id=args.property_id)
+        db.session.add(path)
+        db.session.commit()
+
+        # add all pages to path_pages
+        for page in args.pages:
+            path_page = PathPageModel(path_id=path.id, page_id=page['id'])
+            db.session.add(path_page)
+            db.session.commit()
+
+        return path, 201
+
+    @marshal_with(path_fields)
     def get(self):
         records = PathModel.query.all()
         return records, 200
@@ -63,7 +85,7 @@ class Paths(Resource):
 
 class Path(Resource):
 
-    @marshal_with(fields)
+    @marshal_with(path_fields)
     def get(self, id):
         record = PathModel.query.get(id)
         if record:
@@ -71,7 +93,7 @@ class Path(Resource):
         else:
             abort(404, message="Record Not Found")
 
-    @marshal_with(fields)
+    @marshal_with(path_fields)
     def put(self, id):
         args = pathParser.parse_args()
         record = PathModel.query.get(id)

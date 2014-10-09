@@ -28,7 +28,7 @@ parser.add_argument('limit', type=int)
 # FIELDS
 # ======
 
-fields = {
+page_fields = {
     'id': fields.Integer,
     'page': fields.String,
 }
@@ -39,7 +39,7 @@ fields = {
 
 class Pages(Resource):
 
-    @marshal_with(fields)
+    @marshal_with(page_fields)
     def post(self):
         args = parser.parse_args()
         record = PageModel(page=args.page)
@@ -47,7 +47,7 @@ class Pages(Resource):
         db.session.commit()
         return record, 201
 
-    @marshal_with(fields)
+    @marshal_with(page_fields)
     def get(self):
         records = PageModel.query.all()
         return records, 200
@@ -55,7 +55,7 @@ class Pages(Resource):
 
 class Page(Resource):
 
-    @marshal_with(fields)
+    @marshal_with(page_fields)
     def get(self, id):
         record = PageModel.query.get(id)
         if record:
@@ -63,7 +63,7 @@ class Page(Resource):
         else:
             abort(404, message="Record Not Found")
 
-    @marshal_with(fields)
+    @marshal_with(page_fields)
     def put(self, id):
         args = parser.parse_args()
         record = PageModel.query.get(id)

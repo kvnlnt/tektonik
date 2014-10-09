@@ -36,7 +36,7 @@ class TestURLs:
         db.drop_all()
 
     def test_paths_post(self):
-        data = '{"path":"/testpath"}'
+        data = '{"path":"/testpath", "pages":[]}'
         response = self.app.post('/paths', data=data, headers=self.headers)
         assert response.status_code == 201
 

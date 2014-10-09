@@ -16,6 +16,7 @@ Endpoint testing:
 
 
 curl -i -H "Content-Type: application/json" -X DELETE -d http://127.0.0.1:5000/paths/14
+curl -i -H "Content-Type: application/json" -X POST -d '{"path":"/test", "property_id":1, "pages":[{"id":2}]}' http://127.0.0.1:5000/paths
 
 checkout RequestParser
 http://blog.miguelgrinberg.com/post/designing-a-restful-api-using-flask-restful
