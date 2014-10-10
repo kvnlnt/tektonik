@@ -4,11 +4,13 @@ ark.tektonik
 
 ark.tektonik or just "tektonik" is the rest api for the project `ARK <http://code.kevinlint.com>`_. It's resources can be best understood by reviewing the ARK project's documentation.
 
+.. _TOP:
 .. contents:: Table of Contents
+   :depth: 2
 
 Properties
 -----------
-Properties are domain names. That's it.
+Properties are domain names.
 
 .. list-table:: MODEL
    :header-rows: 1
@@ -16,95 +18,76 @@ Properties are domain names. That's it.
    * - Column
      - Type
    * - id
-     - integer
+     - primary key
    * - property
      - string
 
 /properties
 ***********
 
-.. list-table:: POST
-   :header-rows: 1
+.. contents:: 
+   :local: 
 
-   * - Content-Type
-     - Requires
-     - Returns
-     - Payload
-   * - application/json
-     - property
-     - 201 or 400
-     - JSON
+POST
+^^^^
 
 Example::
 
    curl -i -H "Content-Type: application/json" -X POST -d '{"property":"website.com"}' http://127.0.0.1:5000/properties
 
+Headers:
 
-.. list-table:: GET
-   :header-rows: 1
+- Content-Type: application/json
 
-   * - Content-Type
-     - Requires
-     - Returns
-     - Payload
-   * - n/a
-     - n/a
-     - 200 or 404
-     - JSON
+Request:
 
-Example::
+.. code-block:: javascript
 
-   curl http://127.0.0.1:5000/properties
+    {
+      "property": "my.website.com"
+    }
+
+Response:
+
+.. code-block:: javascript
+
+    {
+      "id":1,
+      "property": "my.website.com"
+    }
+
+Returns:
+
+- 201
+- 400
 
 
-/properties/:id
-***************
-
-.. list-table:: GET
-   :header-rows: 1
-
-   * - Content-Type
-     - Requires
-     - Returns
-     - Payload
-   * - id
-     - n/a
-     - 200 or 404
-     - JSON
-
-Example::
-    
-    curl http://127.0.0.1:5000/properties/1
-
-.. list-table:: PUT
-   :header-rows: 1
-
-   * - Content-Type
-     - Requires
-     - Returns
-     - Payload
-   * - application/json
-     - property
-     - 200 or 400
-     - JSON
+GET
+^^^^
 
 Example::
 
-   curl -i -H "Content-Type: application/json" -X POST -d '{"property":"website.com"}' http://127.0.0.1:5000/properties/1
+   curl -i -H http://127.0.0.1:5000/properties
 
+Response:
 
-.. list-table:: DELETE
-   :header-rows: 1
+.. code-block:: javascript
 
-   * - Content-Type
-     - Requires
-     - Returns
-     - Payload
-   * - n/a
-     - n/a
-     - 204 or 400
-     - n/a
+    {
+      "id":1,
+      "property": "my.website.com"
+    },
+    {
+      "id":2,
+      "property": "other.website.com"
+    }
 
-Example::
+Returns:
 
-   curl -i -H DELETE http://127.0.0.1:5000/properties/1
+- 200
+- 404
+
+----
+
+TOP_
+
