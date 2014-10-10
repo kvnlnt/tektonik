@@ -12,11 +12,22 @@ Properties are domain names. That's it.
 
 /properties
 ***********
+
+    .. list-table:: MODEL
+       :header-rows: 1
+
+       * - Column
+         - Type
+       * - id
+         - integer
+       * - property
+         - string
+
     GET::
 
         curl http://127.0.0.1:5000/properties
 
-    POST
+    POST::
 
        curl -i -H "Content-Type: application/json" -X POST -d '{"property":"website.com"}' http://127.0.0.1:5000/properties
 
