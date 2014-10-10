@@ -38,13 +38,15 @@ Properties are domain names. That's it.
      - property
      - 201, property JSON object
 
-EXAMPLES
+*Examples*
 
-- GET::
+----
+
+GET::
     
     curl http://127.0.0.1:5000/properties
 
-- POST::
+POST::
 
    curl -i -H "Content-Type: application/json" -X POST -d '{"property":"website.com"}' http://127.0.0.1:5000/properties
 
@@ -71,16 +73,18 @@ EXAMPLES
      - n/a
      - 204
 
-EXAMPLES
+*Examples*
 
-- GET::
+----
+
+GET::
     
     curl http://127.0.0.1:5000/properties/1
 
-- PUT::
+PUT::
 
    curl -i -H "Content-Type: application/json" -X POST -d '{"property":"website.com"}' http://127.0.0.1:5000/properties/1
 
-- DELETE::
+DELETE::
 
    curl -i -H DELETE http://127.0.0.1:5000/properties/1
