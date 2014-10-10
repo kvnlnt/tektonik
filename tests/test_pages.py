@@ -37,7 +37,8 @@ class TestURLs:
 
     def test_pages_post(self):
         data = '{"page":"/testpage"}'
-        response = self.app.post('/pages', data=data, headers=self.headers)
+        endpoint = '/pages'
+        response = self.app.post(endpoint, data=data, headers=self.headers)
         assert response.status_code == 201
 
     def test_pages_get(self):

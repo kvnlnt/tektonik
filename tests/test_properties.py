@@ -37,11 +37,8 @@ class TestURLs:
 
     def test_properties_post(self):
         data = '{"property":"test.com"}'
-        response = self.app.post(
-            '/properties',
-            data=data,
-            headers=self.headers
-        )
+        endpoint = '/properties'
+        response = self.app.post(endpoint, data=data, headers=self.headers)
         assert response.status_code == 201
 
     def test_properties_get(self):

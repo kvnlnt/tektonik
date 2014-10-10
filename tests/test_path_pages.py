@@ -43,11 +43,8 @@ class TestURLs:
 
     def test_path_pages_post(self):
         data = '{"path_id": 1, "page_id": 1}'
-        response = self.app.post(
-            '/path-pages',
-            data=data,
-            headers=self.headers
-        )
+        endpoint = '/path-pages'
+        response = self.app.post(endpoint, data=data, headers=self.headers)
         assert response.status_code == 201
 
     def test_path_pages_get(self):
