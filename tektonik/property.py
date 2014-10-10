@@ -50,7 +50,10 @@ class Properties(Resource):
     @marshal_with(property_fields)
     def get(self):
         records = PropertyModel.query.all()
-        return records, 200
+        if records:
+            return records, 200
+        else:
+            abort(404, message="No Records Found")
 
 
 class Property(Resource):

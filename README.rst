@@ -29,14 +29,18 @@ Properties are domain names. That's it.
      - Content-Type
      - Requires
      - Returns
-   * - GET
-     - n/a
-     - n/a
-     - 200, JSON list of property objects
+     - Payload
    * - POST
      - application/json
      - property
-     - 201, property JSON object
+     - 201 or 400
+     - JSON
+   * - GET
+     - n/a
+     - n/a
+     - 200 or 404
+     - JSON
+
 
 *Examples*
 
@@ -60,18 +64,22 @@ POST::
      - Content-Type
      - Requires
      - Returns
+     - Payload
    * - GET
      - id
      - n/a
-     - 200, JSON object of property
+     - 200 or 404
+     - JSON
    * - PUT
      - application/json
      - property
-     - 200, updated property JSON object
+     - 200 or 400
+     - JSON
    * - DELETE
      - n/a
      - n/a
-     - 204
+     - 204 or 400
+     - n/a
 
 *Examples*
 
