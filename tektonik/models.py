@@ -28,11 +28,11 @@ class Path(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     path = db.Column(db.String(100))
     property_id = db.Column(db.Integer, db.ForeignKey('properties.id'))
-    # pages = db.relationship(
-    #     'PathPage',
-    #     backref='path',
-    #     cascade="save-update, merge, delete, delete-orphan"
-    # )
+    pages = db.relationship(
+        'PathPage',
+        backref='path',
+        cascade="save-update, merge, delete, delete-orphan"
+    )
 
 
 class Page(db.Model):

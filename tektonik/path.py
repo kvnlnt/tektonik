@@ -39,19 +39,25 @@ pathParser.replace_argument('property_id', type=int, required=True)
 # FIELDS
 # ======
 
-page_fields = {
-    'id': fields.String,
+path_fields = {
+    'id': fields.Integer,
+    'page': fields.String
+}
+
+path_page_fields = {
+    'id': fields.Integer,
     'path_id': fields.Integer,
     'page_id': fields.Integer,
     'effective_date': fields.DateTime,
-    'expiration_date': fields.DateTime
+    'expiration_date': fields.DateTime,
+    'page': fields.Nested(path_fields)
 }
 
 path_fields = {
     'id': fields.Integer,
     'path': fields.String,
     'property_id': fields.Integer,
-    'pages': fields.List(fields.Nested(page_fields))
+    'pages': fields.List(fields.Nested(path_page_fields))
 }
 
 # RESOURCES
@@ -96,12 +102,24 @@ class Path(Resource):
     @marshal_with(path_fields)
     def put(self, id):
         args = pathParser.parse_args()
-        record = PathModel.query.get(id)
-        if record:
-            record.path = args.path
-            record.property_id = args.property_id
+        path = PathModel.query.get(id)
+        if path:
+
+            path.path = args.path
+            path.property_id = args.property_id
             db.session.commit()
-            return record, 200
+
+            # delete path pages
+            PathPageModel.query.filter_by(path_id=id).delete()
+            db.session.commit()
+
+            # add all pages to path_pages
+            for page in args.pages:
+                path_page = PathPageModel(path_id=path.id, page_id=page['id'])
+                db.session.add(path_page)
+                db.session.commit()
+
+            return path, 200
         else:
             abort(404, message="Record Not Found")
 
