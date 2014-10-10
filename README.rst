@@ -22,77 +22,89 @@ Properties are domain names. That's it.
 
 /properties
 ***********
-.. list-table:: METHODS
+
+.. list-table:: POST
    :header-rows: 1
 
-   * - Method
-     - Content-Type
+   * - Content-Type
      - Requires
      - Returns
      - Payload
-   * - POST
-     - application/json
+   * - application/json
      - property
      - 201 or 400
      - JSON
-   * - GET
-     - n/a
-     - n/a
-     - 200 or 404
-     - JSON
 
-
-*Examples*
-
-----
-
-GET::
-    
-    curl http://127.0.0.1:5000/properties
-
-POST::
+Example::
 
    curl -i -H "Content-Type: application/json" -X POST -d '{"property":"website.com"}' http://127.0.0.1:5000/properties
 
 
-/properties/:id
-***************
-.. list-table:: METHODS
+.. list-table:: GET
    :header-rows: 1
 
-   * - Method
-     - Content-Type
+   * - Content-Type
      - Requires
      - Returns
      - Payload
-   * - GET
-     - id
+   * - n/a
      - n/a
      - 200 or 404
      - JSON
-   * - PUT
-     - application/json
+
+Example::
+
+   curl http://127.0.0.1:5000/properties
+
+
+/properties/:id
+***************
+
+.. list-table:: GET
+   :header-rows: 1
+
+   * - Content-Type
+     - Requires
+     - Returns
+     - Payload
+   * - id
+     - n/a
+     - 200 or 404
+     - JSON
+
+Example::
+    
+    curl http://127.0.0.1:5000/properties/1
+
+.. list-table:: PUT
+   :header-rows: 1
+
+   * - Content-Type
+     - Requires
+     - Returns
+     - Payload
+   * - application/json
      - property
      - 200 or 400
      - JSON
-   * - DELETE
-     - n/a
+
+Example::
+
+   curl -i -H "Content-Type: application/json" -X POST -d '{"property":"website.com"}' http://127.0.0.1:5000/properties/1
+
+
+.. list-table:: DELETE
+   :header-rows: 1
+
+   * - Content-Type
+     - Requires
+     - Returns
+     - Payload
+   * - n/a
      - n/a
      - 204 or 400
      - n/a
 
-*Examples*
-
-----
-
-GET::
-    
-    curl http://127.0.0.1:5000/properties/1
-
-PUT::
-
-   curl -i -H "Content-Type: application/json" -X POST -d '{"property":"website.com"}' http://127.0.0.1:5000/properties/1
-
-DELETE::
+Example::
 
    curl -i -H DELETE http://127.0.0.1:5000/properties/1
