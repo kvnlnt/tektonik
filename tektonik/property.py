@@ -1,10 +1,11 @@
 from flask import Blueprint
 from flask.ext.restful import abort
 from flask.ext.restful import Api
-from flask.ext.restful import reqparse
 from flask.ext.restful import fields
 from flask.ext.restful import marshal_with
+from flask.ext.restful import reqparse
 from flask.ext.restful import Resource
+from flask_restful.utils import cors
 from tektonik.models import db
 from tektonik.models import Property as PropertyModel
 
@@ -13,6 +14,11 @@ from tektonik.models import Property as PropertyModel
 
 controller = Blueprint('property', __name__)
 api = Api(controller)
+
+# DECORATORS
+# ==========
+
+api.decorators = [cors.crossdomain(origin='*')]
 
 # PARSER
 # ======
