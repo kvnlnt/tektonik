@@ -98,7 +98,7 @@ class Property(Resource):
             abort(404, message="Record Not Found")
 
     def options(self):
-        return {'Allow': '*'}, 200, {'Access-Control-Allow-Methods': '*'}
+        pass
 
 # ENDPOINTS
 # =========
