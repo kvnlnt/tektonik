@@ -8,6 +8,7 @@ from flask.ext.restful import Resource
 from flask_restful.utils import cors
 from tektonik.models import db
 from tektonik.models import Property as PropertyModel
+from tektonik.validate import Validate
 
 # CONTROLLER
 # ==========
@@ -26,7 +27,11 @@ api.decorators = [cors.crossdomain(origin='*')]
 # base parser
 parser = reqparse.RequestParser()
 parser.add_argument('id', type=int)
-parser.add_argument('property', type=str)
+parser.add_argument(
+    'property',
+    type=Validate.property,
+    required=True
+)
 parser.add_argument('offset', type=int)
 parser.add_argument('limit', type=int)
 
@@ -91,6 +96,9 @@ class Property(Resource):
             return '', 204
         else:
             abort(404, message="Record Not Found")
+
+    def options(self):
+        return {'Allow': '*'}, 200, {'Access-Control-Allow-Methods': '*'}
 
 # ENDPOINTS
 # =========
