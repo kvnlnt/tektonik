@@ -19,7 +19,7 @@ api = Api(controller)
 # DECORATORS
 # ==========
 
-api.decorators = [cors.crossdomain(origin='*')]
+api.decorators = [cors.crossdomain(origin='*', headers='Content-Type')]
 
 # PARSER
 # ======
@@ -65,6 +65,9 @@ class Properties(Resource):
             return records, 200
         else:
             abort(404, message="No Records Found")
+
+    def options(self):
+        pass
 
 
 class Property(Resource):
