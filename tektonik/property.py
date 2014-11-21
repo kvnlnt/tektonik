@@ -1,8 +1,10 @@
 from flask import Blueprint
+from flask import jsonify
 from flask.ext.restful import abort
 from flask.ext.restful import Api
 from flask.ext.restful import fields
 from flask.ext.restful import marshal_with
+from flask.ext.restful import marshal
 from flask.ext.restful import reqparse
 from flask.ext.restful import Resource
 from flask_restful.utils import cors
@@ -48,23 +50,31 @@ property_fields = {
 # =========
 
 
+def make_error(status_code, error):
+    response = jsonify({'error': error})
+    response.status_code = status_code
+    return response
+
+
 class Properties(Resource):
 
-    @marshal_with(property_fields)
     def post(self):
         args = parser.parse_args()
+        print "============================================"
         record = PropertyModel(property=args.property)
-        db.session.add(record)
-        db.session.commit()
-        return record, 201
+        if record:
+            db.session.add(record)
+            db.session.commit()
+            return marshal(record, property_fields), 201
+        else:
+            return make_error(403, 'broken')
 
-    @marshal_with(property_fields)
     def get(self):
         records = PropertyModel.query.all()
         if records:
-            return records, 200
+            return marshal(records, property_fields), 200
         else:
-            abort(404, message="No Records Found")
+            return make_error(404, 'No Records Found')
 
     def options(self):
         pass
@@ -98,7 +108,7 @@ class Property(Resource):
             db.session.commit()
             return '', 204
         else:
-            abort(404, message="Record Not Found")
+            return make_error(404, 'Record Not Found')
 
     def options(self):
         pass
