@@ -16,7 +16,7 @@ testing:
 
 
 Endpoint testing:
-# POST      curl -i -H "Content-Type: application/json" -X POST -d '{"property":"kevinlint.com"}' http://127.0.0.1:5000/properties
+# POST      curl -i -H "Content-Type: application/json" -X POST -d '{"property":"kevinlint.com"}' http://127.0.0.1:5001/properties
 # GET       curl http://127.0.0.1:5000/properties
 # PUT       curl -i -H "Content-Type: application/json" -X PUT -d '{"id":1, "property":"updated"}' http://127.0.0.1:5000/properties
 # DELETE    curl -i -H "Content-Type: application/json" -X DELETE -d '{"id":14}' http://127.0.0.1:5000/properties

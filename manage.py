@@ -3,8 +3,9 @@ import os
 
 from flask.ext.script import Manager, Server
 from tektonik import create_app
-from tektonik.models import db, Property, PropertySchema
-from marshmallow import Schema
+from tektonik.models import db
+from tektonik.models import Property
+from tektonik.schemas import Property as PropertySchema
 
 # default to dev config because no one should use this in
 # production anyway
