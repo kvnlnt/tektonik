@@ -1,3 +1,10 @@
+Needs:
+
+CORS
+Authentication & Session management (token based)
+Decorators for json, rate limiting, pagination, error handling
+
+
 http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
 
 testing:

@@ -3,10 +3,8 @@ import os
 
 from flask import Flask
 from tektonik.models import db
-from tektonik.property import controller as property
-from tektonik.path import controller as path
-from tektonik.page import controller as page
-from tektonik.path_page import controller as path_page
+from tektonik.v1_0.properties import api
+from flask.ext.cors import CORS
 
 
 def create_app(object_name, env="prod"):
@@ -22,18 +20,17 @@ def create_app(object_name, env="prod"):
     """
 
     app = Flask(__name__)
-
     app.config.from_object(object_name)
     app.config['ENV'] = env
+
+    # config cors
+    CORS(app, headers='Content-Type')
 
     #init SQLAlchemy
     db.init_app(app)
 
-    # register our blueprints
-    app.register_blueprint(property)
-    app.register_blueprint(path)
-    app.register_blueprint(page)
-    app.register_blueprint(path_page)
+    # register blueprints
+    app.register_blueprint(api, url_prefix='/v1_0')
 
     return app
 
