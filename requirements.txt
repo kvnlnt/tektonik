@@ -1,8 +1,10 @@
 Flask==0.10.1
+
+# Extensions
 Flask-SQLAlchemy==1.0
 Flask-Script==2.0.5
-SQLAlchemy==0.9.6
+Flask-Marshmallow==0.3.0
+Flask-CORS==1.9.0
+
+# Testing
 pytest==2.6.0
-Werkzeug==0.9.6
-Flask-CORS==1.8.0
--e git://github.com/kvnlnt/flask-restful.git#egg=flask_restful

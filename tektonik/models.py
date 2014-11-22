@@ -1,5 +1,7 @@
 from flask.ext.sqlalchemy import SQLAlchemy
+from marshmallow import Schema
 
+# create instance of sqlalchemy
 db = SQLAlchemy()
 
 
@@ -9,6 +11,11 @@ class Property(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     property = db.Column(db.String(100))
     paths = db.relationship('Path', backref=db.backref('properties'))
+
+
+class PropertySchema(Schema):
+    class Meta:
+        fields = ('id', 'property')
 
 
 class PathPage(db.Model):
