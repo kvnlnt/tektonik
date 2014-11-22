@@ -15,7 +15,7 @@ def get_properties():
     if errors:
         return jsonify({"result": errors}), 404
     else:
-        return jsonify({"result": result.data}), 200
+        return jsonify({"result": result}), 200
 
 
 @api.route("/properties", methods=['POST'])
