@@ -2,9 +2,9 @@
 import os
 
 from flask import Flask
+from flask.ext.cors import CORS
 from tektonik.models import db
 from tektonik.v1_0.properties import api
-from flask.ext.cors import CORS
 
 
 def create_app(object_name, env="prod"):

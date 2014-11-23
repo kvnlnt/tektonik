@@ -1,9 +1,11 @@
 from marshmallow import Schema
-from marshmallow import ValidationError
 from marshmallow import fields
+from marshmallow import ValidationError
 
 
 class Property(Schema):
+
+    """ Property schema """
 
     # validations
     def property_min_length(value, error=None):

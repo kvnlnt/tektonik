@@ -1,3 +1,7 @@
+"""
+:synopsis: Properties controller
+"""
+
 from flask import jsonify
 from flask import request
 from tektonik.models import db
@@ -8,6 +12,7 @@ from tektonik.v1_0 import api
 
 @api.route("/properties", methods=['POST'])
 def create_property():
+    """ create new property """
 
     schema = PropertySchema(strict=True)
     result, errors = schema.load(request.json)

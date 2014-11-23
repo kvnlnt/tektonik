@@ -6,6 +6,8 @@ db = SQLAlchemy()
 
 class Property(db.Model):
 
+    """ Property model. """
+
     __tablename__ = 'properties'
     id = db.Column(db.Integer, primary_key=True)
     property = db.Column(db.String(100))
@@ -13,6 +15,8 @@ class Property(db.Model):
 
 
 class PathPage(db.Model):
+
+    """ Path to Page model. """
 
     __tablename__ = 'path_pages'
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +28,8 @@ class PathPage(db.Model):
 
 
 class Path(db.Model):
+
+    """ Path model """
 
     __tablename__ = 'paths'
     id = db.Column(db.Integer, primary_key=True)
@@ -37,6 +43,8 @@ class Path(db.Model):
 
 
 class Page(db.Model):
+
+    """ Page model """
 
     __tablename__ = 'pages'
     id = db.Column(db.Integer, primary_key=True)
