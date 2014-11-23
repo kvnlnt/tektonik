@@ -1,7 +1,8 @@
 #! ../env/bin/python
 # -*- coding: utf-8 -*-
 from tektonik import create_app
-from tektonik.models import db, Property
+from tektonik.models import db
+from tektonik.models import Property
 
 
 class TestURLs:
@@ -10,6 +11,9 @@ class TestURLs:
 
         # get app test config
         app = create_app('tektonik.settings.TestConfig', env='dev')
+
+        # version url prefix
+        self.version = '/v1_0/properties'
 
         # create test app
         self.app = app.test_client()
@@ -35,29 +39,27 @@ class TestURLs:
         db.session.remove()
         db.drop_all()
 
-    def test_properties_post(self):
+    def test_create_property(self):
         data = '{"property":"test.com"}'
-        endpoint = '/properties'
-        response = self.app.post(endpoint, data=data, headers=self.headers)
+        response = self.app.post(self.version, data=data, headers=self.headers)
         assert response.status_code == 201
 
-    def test_properties_get(self):
-        endpoint = '/properties'
-        response = self.app.get(endpoint)
+    def test_read_properties(self):
+        response = self.app.get(self.version)
         assert response.status_code == 200
 
-    def test_property_get(self):
-        endpoint = '/properties/' + str(self.record.id)
+    def test_read_property(self):
+        endpoint = self.version + '/' + str(self.record.id)
         response = self.app.get(endpoint, headers=self.headers)
         assert response.status_code == 200
 
-    def test_property_put(self):
-        endpoint = '/properties/' + str(self.record.id)
+    def test_update_property(self):
+        endpoint = self.version + '/' + str(self.record.id)
         data = '{"property":"changed.com"}'
         response = self.app.put(endpoint, data=data, headers=self.headers)
         assert response.status_code == 200
 
-    def test_property_delete(self):
-        endpoint = '/properties/' + str(self.record.id)
+    def test_delete_property(self):
+        endpoint = self.version + '/' + str(self.record.id)
         response = self.app.delete(endpoint, headers=self.headers)
-        assert response.status_code == 204
+        assert response.status_code == 200

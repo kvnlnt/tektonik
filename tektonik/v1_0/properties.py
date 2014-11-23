@@ -6,19 +6,6 @@ from tektonik.schemas import Property as PropertySchema
 from tektonik.v1_0 import api
 
 
-@api.route("/properties", methods=['GET'])
-def get_properties():
-
-    properties = PropertyModel.query.all()
-    schema = PropertySchema(many=True)
-    result, errors = schema.dump(properties)
-
-    if errors:
-        return jsonify({"result": errors}), 404
-    else:
-        return jsonify({"result": result}), 200
-
-
 @api.route("/properties", methods=['POST'])
 def create_property():
 
@@ -32,11 +19,24 @@ def create_property():
         db.session.add(record)
         db.session.commit()
         record = schema.dump(record).data
-        return jsonify(record), 200
+        return jsonify(record), 201
+
+
+@api.route("/properties", methods=['GET'])
+def read_properties():
+
+    properties = PropertyModel.query.all()
+    schema = PropertySchema(many=True)
+    result, errors = schema.dump(properties)
+
+    if errors:
+        return jsonify({"result": errors}), 404
+    else:
+        return jsonify({"result": result}), 200
 
 
 @api.route("/properties/<int:id>", methods=['GET'])
-def get_property(id):
+def read_property(id):
 
     record = PropertyModel.query.get(id)
     schema = PropertySchema()
@@ -46,6 +46,22 @@ def get_property(id):
         return jsonify({"result": "Record not found"}), 404
     else:
         return jsonify({"result": result}), 200
+
+
+@api.route("/properties/<int:id>", methods=['PUT', 'PATCH'])
+def update_property(id):
+
+    record = PropertyModel.query.get(id)
+    schema = PropertySchema(strict=True)
+    result, errors = schema.dump(request.json)
+
+    if errors:
+        return jsonify({"result": errors}), 403
+    else:
+        record.property = result['property']
+        db.session.commit()
+        record = schema.dump(record).data
+        return jsonify(record), 200
 
 
 @api.route("/properties/<int:id>", methods=['DELETE'])
