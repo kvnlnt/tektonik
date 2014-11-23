@@ -4,26 +4,23 @@ from marshmallow import fields
 
 
 class Property(Schema):
-    property = fields.String(required=True)
-    
+
+    # validations
+    def property_min_length(value, error=None):
+        if len(value) < 3:
+            raise ValidationError("Property too short (< 3)", 'property')
+
+    def property_max_length(value, error=None):
+        if len(value) > 100:
+            raise ValidationError("Propert too long (> 100)", 'property')
+
+    # fields
+    id = fields.Integer()
+    property = fields.String(
+        required=True,
+        validate=[property_min_length, property_max_length]
+    )
+
+    # json fields
     class Meta:
         fields = ('id', 'property')
-
-
-@Property.error_handler
-def handle_errors(schema, errors, obj):
-    return errors
-
-
-# @Property.validator
-# def validate_property(schema, input_data):
-#     if 'property' in input_data:
-#         if input_data['property'] == "":
-#             raise ValidationError('error A', 'property')
-
-
-# @Property.validator
-# def validate_property_2(schema, input_data):
-#     if 'property' in input_data:
-#         if input_data['property'] == "":
-#             raise ValidationError('error B', 'property')
