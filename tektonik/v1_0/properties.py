@@ -14,7 +14,7 @@ from tektonik.v1_0 import api
 def create_property():
     """ create new property """
 
-    schema = PropertySchema(strict=True)
+    schema = PropertySchema()
     result, errors = schema.load(request.json)
 
     if errors:
