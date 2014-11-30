@@ -5,6 +5,7 @@ Flask-SQLAlchemy==1.0
 Flask-Script==2.0.5
 Flask-Marshmallow==0.3.0
 Flask-CORS==1.9.0
+Flask-WTF==0.9.0
 
 # Testing
 pytest==2.6.0

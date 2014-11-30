@@ -18,13 +18,13 @@ def create_property():
     result, errors = schema.load(request.json)
 
     if errors:
-        return jsonify({"result": errors}), 403
+        return jsonify({"errors": errors}), 403
     else:
         record = PropertyModel(property=result['property'])
         db.session.add(record)
         db.session.commit()
         record = schema.dump(record).data
-        return jsonify(record), 201
+        return jsonify({"result": record}), 201
 
 
 @api.route("/properties", methods=['GET'])
