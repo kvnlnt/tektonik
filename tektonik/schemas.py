@@ -10,6 +10,9 @@ class Property(Schema):
 
     # validations
     def min(value, error=None):
+        if len(value) == 0:
+            raise ValidationError("Property is required")
+
         if len(value) < 3:
             raise ValidationError("Property too short (< 3)", 'property')
 

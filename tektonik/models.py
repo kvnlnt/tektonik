@@ -1,4 +1,5 @@
 from flask.ext.sqlalchemy import SQLAlchemy
+from tektonik.types import LowerCaseText
 
 # create instance of sqlalchemy
 db = SQLAlchemy()
@@ -10,7 +11,7 @@ class Property(db.Model):
 
     __tablename__ = 'properties'
     id = db.Column(db.Integer, primary_key=True)
-    property = db.Column(db.String(100))
+    property = db.Column(LowerCaseText(100))
     paths = db.relationship('Path', backref=db.backref('properties'))
 
 
@@ -33,7 +34,7 @@ class Path(db.Model):
 
     __tablename__ = 'paths'
     id = db.Column(db.Integer, primary_key=True)
-    path = db.Column(db.String(100))
+    path = db.Column(LowerCaseText(100))
     property_id = db.Column(db.Integer, db.ForeignKey('properties.id'))
     pages = db.relationship(
         'PathPage',
@@ -48,4 +49,4 @@ class Page(db.Model):
 
     __tablename__ = 'pages'
     id = db.Column(db.Integer, primary_key=True)
-    page = db.Column(db.String(100))
+    page = db.Column(LowerCaseText(100))

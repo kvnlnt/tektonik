@@ -57,16 +57,16 @@ def read_property(id):
 def update_property(id):
 
     record = PropertyModel.query.get(id)
-    schema = PropertySchema(strict=True)
-    result, errors = schema.dump(request.json)
+    schema = PropertySchema()
+    result, errors = schema.load(request.json)
 
     if errors:
-        return jsonify({"result": errors}), 403
+        return jsonify({"errors": errors}), 403
     else:
         record.property = result['property']
         db.session.commit()
         record = schema.dump(record).data
-        return jsonify(record), 200
+        return jsonify({"result": record}), 200
 
 
 @api.route("/properties/<int:id>", methods=['DELETE'])
