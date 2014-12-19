@@ -24,7 +24,10 @@ def create_property():
         db.session.add(record)
         db.session.commit()
         record = schema.dump(record).data
-        return jsonify({"result": record}), 201
+        return jsonify(
+            {"result":
+                {"record": record,
+                 "message": "Property successfully added"}}), 201
 
 
 @api.route("/properties", methods=['GET'])
