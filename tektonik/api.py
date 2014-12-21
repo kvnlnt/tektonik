@@ -2,12 +2,14 @@
 :synopsis: Properties controller
 """
 
+from flask import Blueprint
 from flask import jsonify
 from flask import request
 from tektonik.models import db
 from tektonik.models import Property as PropertyModel
 from tektonik.schemas import Property as PropertySchema
-from tektonik.v1_0 import api
+
+api = Blueprint('api', __name__)
 
 
 @api.route("/properties", methods=['POST'])

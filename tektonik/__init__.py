@@ -4,7 +4,7 @@ import os
 from flask import Flask
 from flask.ext.cors import CORS
 from tektonik.models import db
-from tektonik.v1_0.properties import api
+from tektonik.api import api
 
 
 def create_app(object_name, env="prod"):
@@ -30,7 +30,7 @@ def create_app(object_name, env="prod"):
     db.init_app(app)
 
     # register blueprints
-    app.register_blueprint(api, url_prefix='/v1_0')
+    app.register_blueprint(api)
 
     return app
 
