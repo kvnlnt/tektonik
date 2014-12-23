@@ -6,10 +6,10 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from tektonik.models import db
-from tektonik.models import Property as PropertyModel
-from tektonik.schemas import Property as PropertySchema
 from tektonik.models import Path as PathModel
-from tektonik.schemas import Path as PathSchema
+from tektonik.models import Property as PropertyModel
+from tektonik.schemas.paths import Path as PathSchema
+from tektonik.schemas.properties import Property as PropertySchema
 
 api = Blueprint('api', __name__)
 

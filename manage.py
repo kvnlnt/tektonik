@@ -5,7 +5,9 @@ from flask.ext.script import Manager, Server
 from tektonik import create_app
 from tektonik.models import db
 from tektonik.models import Property
-from tektonik.schemas import Property as PropertySchema
+from tektonik.schemas.properties import Property as PropertySchema
+from tektonik.models import Path
+from tektonik.schemas.paths import Path as PathSchema
 
 # default to dev config because no one should use this in
 # production anyway
@@ -25,7 +27,9 @@ def make_shell_context():
     return dict(app=app,
                 db=db,
                 Property=Property,
-                PropertySchema=PropertySchema)
+                PropertySchema=PropertySchema,
+                Path=Path,
+                PathSchema=PathSchema)
 
 
 @manager.command
