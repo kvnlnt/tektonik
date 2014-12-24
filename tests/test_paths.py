@@ -14,7 +14,7 @@ class TestURLs:
         app = create_app('tektonik.settings.TestConfig', env='dev')
 
         # version url prefix
-        self.prefix = '/paths'
+        self.prefix = '/paths/'
 
         # create test app
         self.app = app.test_client()
@@ -56,18 +56,18 @@ class TestURLs:
         assert response.status_code == 200
 
     def test_read_path(self):
-        endpoint = self.prefix + '/' + str(self.record.id)
+        endpoint = self.prefix + str(self.record.id)
         response = self.app.get(endpoint, headers=self.headers)
         assert response.status_code == 200
 
     def test_update_path(self):
         property_id = str(self.property.id)
-        endpoint = self.prefix + '/' + str(self.record.id)
+        endpoint = self.prefix + str(self.record.id)
         data = '{"path":"changed", "property_id":' + property_id + '}'
         response = self.app.put(endpoint, data=data, headers=self.headers)
         assert response.status_code == 200
 
     def test_delete_path(self):
-        endpoint = self.prefix + '/' + str(self.record.id)
+        endpoint = self.prefix + str(self.record.id)
         response = self.app.delete(endpoint, headers=self.headers)
         assert response.status_code == 200
