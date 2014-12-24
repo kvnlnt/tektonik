@@ -6,6 +6,7 @@ from flask.ext.cors import CORS
 from tektonik.models import db
 from tektonik.controllers.properties import blueprint as properties_blueprint
 from tektonik.controllers.paths import blueprint as paths_blueprint
+from tektonik.controllers.pages import blueprint as pages_blueprint
 
 
 def create_app(object_name, env="prod"):
@@ -33,6 +34,7 @@ def create_app(object_name, env="prod"):
     # register blueprints
     app.register_blueprint(properties_blueprint, url_prefix='/properties')
     app.register_blueprint(paths_blueprint, url_prefix='/paths')
+    app.register_blueprint(pages_blueprint, url_prefix='/pages')
 
     return app
 

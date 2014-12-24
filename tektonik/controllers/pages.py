@@ -6,18 +6,18 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from tektonik.models import db
-from tektonik.models import Path as PathModel
-from tektonik.schemas.paths import Path as PathSchema
+from tektonik.models import Page as PageModel
+from tektonik.schemas.pages import Page as PageSchema
 
-blueprint = Blueprint('paths', __name__)
+blueprint = Blueprint('pages', __name__)
 
 
 @blueprint.route("", methods=['GET'])
-def list_paths():
+def list_pages():
 
-    paths = PathModel.query.all()
-    schema = PathSchema(many=True)
-    result, errors = schema.dump(paths)
+    pages = PageModel.query.all()
+    schema = PageSchema(many=True)
+    result, errors = schema.dump(pages)
 
     if errors:
         return jsonify({"result": errors}), 404
@@ -26,32 +26,30 @@ def list_paths():
 
 
 @blueprint.route("", methods=['POST'])
-def create_path():
-    """ create new path """
+def create_page():
+    """ create new page """
 
-    schema = PathSchema()
+    schema = PageSchema()
     result, errors = schema.load(request.json)
 
     if errors:
         return jsonify({"errors": errors}), 403
     else:
-        record = PathModel(
-            path=result['path'],
-            property_id=result['property_id'])
+        record = PageModel(page=result['page'])
         db.session.add(record)
         db.session.commit()
         record = schema.dump(record).data
         return jsonify(
             {"result":
                 {"record": record,
-                 "message": "Path successfully added"}}), 201
+                 "message": "Page successfully added"}}), 201
 
 
 @blueprint.route("/<int:id>", methods=['GET'])
-def read_path(id):
+def read_page(id):
 
-    record = PathModel.query.get(id)
-    schema = PathSchema()
+    record = PageModel.query.get(id)
+    schema = PageSchema()
     result, errors = schema.dump(record)
 
     if not record:
@@ -61,26 +59,26 @@ def read_path(id):
 
 
 @blueprint.route("/<int:id>", methods=['PUT', 'PATCH'])
-def update_path(id):
+def update_page(id):
 
-    record = PathModel.query.get(id)
-    schema = PathSchema()
+    record = PageModel.query.get(id)
+    schema = PageSchema()
     result, errors = schema.load(request.json)
 
     if errors:
         return jsonify({"errors": errors}), 403
     else:
-        record.path = result['path']
+        record.page = result['page']
         db.session.commit()
         record = schema.dump(record).data
         return jsonify({"result": record}), 200
 
 
 @blueprint.route("/<int:id>", methods=['DELETE'])
-def delete_path(id):
+def delete_page(id):
 
-    record = PathModel.query.get(id)
-    schema = PathSchema()
+    record = PageModel.query.get(id)
+    schema = PageSchema()
     result, errors = schema.dump(record)
 
     if not record:

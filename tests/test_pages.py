@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 from tektonik import create_app
 from tektonik.models import db
-from tektonik.models import Path
-from tektonik.models import Property
+from tektonik.models import Page
 
 
 class TestURLs:
@@ -14,7 +13,7 @@ class TestURLs:
         app = create_app('tektonik.settings.TestConfig', env='dev')
 
         # version url prefix
-        self.prefix = '/paths'
+        self.prefix = '/pages'
 
         # create test app
         self.app = app.test_client()
@@ -25,13 +24,7 @@ class TestURLs:
         # create all tables
         db.create_all()
 
-        # create test record
-        property = Property(property="test property")
-        db.session.add(property)
-        db.session.commit()
-        self.property = property
-
-        record = Path(path="testpath", property_id=property.id)
+        record = Page(page="test page")
         db.session.add(record)
         db.session.commit()
         self.record = record
@@ -45,29 +38,27 @@ class TestURLs:
         db.session.remove()
         db.drop_all()
 
-    def test_list_paths(self):
+    def test_list_pages(self):
         response = self.app.get(self.prefix)
         assert response.status_code == 200
 
-    def test_create_path(self):
-        property_id = str(self.property.id)
-        data = '{"path":"test.com", "property_id":' + property_id + '}'
+    def test_create_page(self):
+        data = '{"page":"test page"}'
         response = self.app.post(self.prefix, data=data, headers=self.headers)
         assert response.status_code == 201
 
-    def test_read_path(self):
+    def test_read_page(self):
         endpoint = self.prefix + '/' + str(self.record.id)
         response = self.app.get(endpoint, headers=self.headers)
         assert response.status_code == 200
 
-    def test_update_path(self):
-        property_id = str(self.property.id)
+    def test_update_page(self):
         endpoint = self.prefix + '/' + str(self.record.id)
-        data = '{"path":"changed", "property_id":' + property_id + '}'
+        data = '{"page":"changed"}'
         response = self.app.put(endpoint, data=data, headers=self.headers)
         assert response.status_code == 200
 
-    def test_delete_path(self):
+    def test_delete_page(self):
         endpoint = self.prefix + '/' + str(self.record.id)
         response = self.app.delete(endpoint, headers=self.headers)
         assert response.status_code == 200

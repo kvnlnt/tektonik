@@ -12,7 +12,7 @@ from tektonik.schemas.properties import Property as PropertySchema
 blueprint = Blueprint('properties', __name__)
 
 
-@blueprint.route("/", methods=['GET'])
+@blueprint.route("", methods=['GET'])
 def list_properties():
 
     properties = PropertyModel.query.all()
@@ -25,7 +25,7 @@ def list_properties():
         return jsonify({"result": result}), 200
 
 
-@blueprint.route("/", methods=['POST'])
+@blueprint.route("", methods=['POST'])
 def create_property():
     """ create new property """
 
