@@ -4,10 +4,14 @@ import os
 from flask.ext.script import Manager, Server
 from tektonik import create_app
 from tektonik.models import db
-from tektonik.models import Property
-from tektonik.schemas.properties import Property as PropertySchema
-from tektonik.models import Path
-from tektonik.schemas.paths import Path as PathSchema
+from tektonik.models.page import Page
+from tektonik.models.path import Path
+from tektonik.models.path_page import PathPage
+from tektonik.models.property import Property
+from tektonik.schemas.page import Page as PageSchema
+from tektonik.schemas.path import Path as PathSchema
+from tektonik.schemas.path_page import PathPage as PathPageSchema
+from tektonik.schemas.property import Property as PropertySchema
 
 # default to dev config because no one should use this in
 # production anyway
@@ -29,7 +33,11 @@ def make_shell_context():
                 Property=Property,
                 PropertySchema=PropertySchema,
                 Path=Path,
-                PathSchema=PathSchema)
+                PathSchema=PathSchema,
+                PathPage=PathPage,
+                PathPageSchema=PathPageSchema,
+                Page=Page,
+                PageSchema=PageSchema)
 
 
 @manager.command

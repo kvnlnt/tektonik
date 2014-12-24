@@ -1,7 +1,7 @@
 from marshmallow import Schema
 from marshmallow import fields
 from marshmallow import ValidationError
-from tektonik.models import Property as PropertyModel
+from tektonik.models.property import Property as PropertyModel
 
 
 class Property(Schema):

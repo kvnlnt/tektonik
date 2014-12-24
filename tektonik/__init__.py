@@ -3,10 +3,10 @@ import os
 
 from flask import Flask
 from flask.ext.cors import CORS
-from tektonik.models import db
-from tektonik.controllers.properties import blueprint as properties_blueprint
-from tektonik.controllers.paths import blueprint as paths_blueprint
 from tektonik.controllers.pages import blueprint as pages_blueprint
+from tektonik.controllers.paths import blueprint as paths_blueprint
+from tektonik.controllers.properties import blueprint as properties_blueprint
+from tektonik.models import db
 
 
 def create_app(object_name, env="prod"):

@@ -6,8 +6,8 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from tektonik.models import db
-from tektonik.models import Property as PropertyModel
-from tektonik.schemas.properties import Property as PropertySchema
+from tektonik.models.property import Property as PropertyModel
+from tektonik.schemas.property import Property as PropertySchema
 
 blueprint = Blueprint('properties', __name__)
 

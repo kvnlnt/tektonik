@@ -6,8 +6,8 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from tektonik.models import db
-from tektonik.models import Path as PathModel
-from tektonik.schemas.paths import Path as PathSchema
+from tektonik.models.path import Path as PathModel
+from tektonik.schemas.path import Path as PathSchema
 
 blueprint = Blueprint('paths', __name__)
 

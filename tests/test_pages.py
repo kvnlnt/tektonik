@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from tektonik import create_app
 from tektonik.models import db
-from tektonik.models import Page
+from tektonik.models.page import Page
 
 
 class TestURLs:
@@ -18,7 +18,7 @@ class TestURLs:
         # create test app
         self.app = app.test_client()
 
-        # set db app
+        # init SQLAlchemy
         db.app = app
 
         # create all tables

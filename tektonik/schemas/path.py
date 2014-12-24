@@ -1,9 +1,9 @@
 from marshmallow import Schema
 from marshmallow import ValidationError
-from tektonik.models import Path as PathModel
-from tektonik.models import Property as PropertyModel
 from marshmallow import fields
-from tektonik.schemas.properties import Property as PropertySchema
+from tektonik.models.path import Path as PathModel
+from tektonik.models.property import Property as PropertyModel
+from tektonik.schemas.property import Property as PropertySchema
 
 
 class Path(Schema):

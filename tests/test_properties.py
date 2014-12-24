@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from tektonik import create_app
 from tektonik.models import db
-from tektonik.models import Property
+from tektonik.models.property import Property
 
 
 class TestURLs:
@@ -20,6 +20,8 @@ class TestURLs:
 
         # set db app
         db.app = app
+
+        db.init_app(app)
 
         # create all tables
         db.create_all()

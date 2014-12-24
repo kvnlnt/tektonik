@@ -6,8 +6,8 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from tektonik.models import db
-from tektonik.models import Page as PageModel
-from tektonik.schemas.pages import Page as PageSchema
+from tektonik.models.page import Page as PageModel
+from tektonik.schemas.page import Page as PageSchema
 
 blueprint = Blueprint('pages', __name__)
 
