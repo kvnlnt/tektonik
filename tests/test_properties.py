@@ -21,8 +21,6 @@ class TestURLs:
         # set db app
         db.app = app
 
-        db.init_app(app)
-
         # create all tables
         db.create_all()
 

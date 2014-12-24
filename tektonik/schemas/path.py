@@ -4,6 +4,7 @@ from marshmallow import fields
 from tektonik.models.path import Path as PathModel
 from tektonik.models.property import Property as PropertyModel
 from tektonik.schemas.property import Property as PropertySchema
+from tektonik.schemas.path_page import PathPage as PathPageSchema
 
 
 class Path(Schema):
@@ -12,8 +13,9 @@ class Path(Schema):
 
     id = fields.Integer()
     path = fields.String()
-    property_id = fields.Integer()
     property = fields.Nested(PropertySchema)
+    property_id = fields.Integer()
+    pages = fields.Nested(PathPageSchema, many=True)
 
 
 @Path.validator
@@ -35,7 +37,7 @@ def validate_path_max(schema, input_data):
 
 
 @Path.validator
-def validate_property_exists(schema, input_data):
+def validate_path_exists(schema, input_data):
 
     property = PropertyModel.query.filter(
         PropertyModel.id == input_data['property_id'])
