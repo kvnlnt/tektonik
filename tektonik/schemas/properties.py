@@ -8,28 +8,31 @@ class Property(Schema):
 
     """ Property schema """
 
-    # validations
-    def min(value, error=None):
-        if len(value) == 0:
-            raise ValidationError("Property is required")
-
-        if len(value) < 3:
-            raise ValidationError("Property too short (< 3)", 'property')
-
-    def max(value, error=None):
-        if len(value) > 100:
-            raise ValidationError("Property too long (> 100)", 'property')
-
     # fields
     id = fields.Integer()
-    property = fields.String(
-        required=True,
-        validate=[min, max]
-    )
+    property = fields.String()
 
     # json fields
     class Meta:
         fields = ('id', 'property')
+
+
+@Property.validator
+def validate_property_min(schema, input_data):
+
+    if len(input_data['property']) == 0:
+        raise ValidationError('Property is required', 'property')
+
+    if len(input_data['property']) > 0 and len(input_data['property']) < 3:
+        raise ValidationError(
+            'Property be at least three characters long', 'property')
+
+
+@Property.validator
+def validate_property_max(schema, input_data):
+
+    if len(input_data['property']) > 100:
+        raise ValidationError('Property too long (> 100)', 'property')
 
 
 @Property.validator

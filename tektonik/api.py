@@ -101,7 +101,9 @@ def create_path():
     if errors:
         return jsonify({"errors": errors}), 403
     else:
-        record = PathModel(path=result['path'])
+        record = PathModel(
+            path=result['path'],
+            property_id=result['property_id'])
         db.session.add(record)
         db.session.commit()
         record = schema.dump(record).data

@@ -1,43 +1,55 @@
 from marshmallow import Schema
-from marshmallow import fields
 from marshmallow import ValidationError
 from tektonik.models import Path as PathModel
+from tektonik.models import Property as PropertyModel
+from marshmallow import fields
+from tektonik.schemas.properties import Property as PropertySchema
 
 
 class Path(Schema):
 
     """ Path schema """
 
-    # validations
-    def min(value, error=None):
-        if len(value) == 0:
-            raise ValidationError("Path is required")
-
-        if len(value) < 3:
-            raise ValidationError("Path too short (< 3)", 'property')
-
-    def max(value, error=None):
-        if len(value) > 100:
-            raise ValidationError("Path too long (> 100)", 'property')
-
-    # fields
     id = fields.Integer()
-    path = fields.String(
-        required=True,
-        validate=[min, max]
-    )
-
-    # json fields
-    class Meta:
-        fields = ('id', 'path')
+    path = fields.String()
+    property_id = fields.Integer()
+    property = fields.Nested(PropertySchema)
 
 
 @Path.validator
-def validate_unique_path(schema, input_data):
+def validate_path_min(schema, input_data):
+
+    if len(input_data['path']) == 0:
+        raise ValidationError('Path is required', 'path')
+
+    if len(input_data['path']) > 0 and len(input_data['path']) < 3:
+        raise ValidationError(
+            'Path be at least three characters long', 'path')
+
+
+@Path.validator
+def validate_path_max(schema, input_data):
+
+    if len(input_data['path']) > 100:
+        raise ValidationError('Path too long (> 100)', 'path')
+
+
+@Path.validator
+def validate_property_exists(schema, input_data):
+
+    property = PropertyModel.query.filter(
+        PropertyModel.id == input_data['property_id'])
+    if property.count() == 0:
+        raise ValidationError('Property must be specified', 'property_id')
+
+
+@Path.validator
+def validate_path_unique(schema, input_data):
 
     # look for property with this name
     record_exists = PathModel.query.filter_by(
-        path=input_data['path']).first()
+        path=input_data['path'],
+        property_id=input_data['property_id']).first()
 
     # default an id for easier handling
     id = input_data.get('id', None)
@@ -56,7 +68,9 @@ def validate_unique_path(schema, input_data):
 
         # if this is an update and the id is different, it's a conflict
         if is_update is True and is_id_same is False:
-            raise ValidationError('Path already exists', 'property')
+            raise ValidationError(
+                'Path already exists for selected property', 'path')
 
         if is_new:
-            raise ValidationError('Path already exists', 'property')
+            raise ValidationError(
+                'Path already exists for selected property', 'path')

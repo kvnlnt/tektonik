@@ -12,7 +12,7 @@ class Property(db.Model):
     __tablename__ = 'properties'
     id = db.Column(db.Integer, primary_key=True)
     property = db.Column(LowerCaseText(100))
-    paths = db.relationship('Path', backref=db.backref('properties'))
+    paths = db.relationship('Path', backref=db.backref('property'))
 
 
 class PathPage(db.Model):
