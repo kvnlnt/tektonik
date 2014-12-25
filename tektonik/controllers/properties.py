@@ -7,7 +7,8 @@ from flask import jsonify
 from flask import request
 from tektonik.models import db
 from tektonik.models.property import Property as PropertyModel
-from tektonik.schemas.property import Property as PropertySchema
+from tektonik.schemas.property import property_schema_list
+from tektonik.schemas.property import property_schema
 
 blueprint = Blueprint('properties', __name__)
 
@@ -16,8 +17,7 @@ blueprint = Blueprint('properties', __name__)
 def list_properties():
 
     properties = PropertyModel.query.all()
-    schema = PropertySchema(many=True)
-    result, errors = schema.dump(properties)
+    result, errors = property_schema_list.dump(properties)
 
     if errors:
         return jsonify({"result": errors}), 404
@@ -29,8 +29,7 @@ def list_properties():
 def create_property():
     """ create new property """
 
-    schema = PropertySchema()
-    result, errors = schema.load(request.json)
+    result, errors = property_schema.load(request.json)
 
     if errors:
         return jsonify({"errors": errors}), 403
@@ -38,7 +37,7 @@ def create_property():
         record = PropertyModel(property=result['property'])
         db.session.add(record)
         db.session.commit()
-        record = schema.dump(record).data
+        record = property_schema.dump(record).data
         return jsonify(
             {"result":
                 {"record": record,
@@ -49,8 +48,7 @@ def create_property():
 def read_property(id):
 
     record = PropertyModel.query.get(id)
-    schema = PropertySchema()
-    result, errors = schema.dump(record)
+    result, errors = property_schema.dump(record)
 
     if not record:
         return jsonify({"result": "Record not found"}), 404
@@ -62,15 +60,14 @@ def read_property(id):
 def update_property(id):
 
     record = PropertyModel.query.get(id)
-    schema = PropertySchema()
-    result, errors = schema.load(request.json)
+    result, errors = property_schema.load(request.json)
 
     if errors:
         return jsonify({"errors": errors}), 403
     else:
         record.property = result['property']
         db.session.commit()
-        record = schema.dump(record).data
+        record = property_schema.dump(record).data
         return jsonify({"result": record}), 200
 
 
@@ -78,8 +75,7 @@ def update_property(id):
 def delete_property(id):
 
     record = PropertyModel.query.get(id)
-    schema = PropertySchema()
-    result, errors = schema.dump(record)
+    result, errors = property_schema.dump(record)
 
     if not record:
         return jsonify({"result": "Record not found"}), 403

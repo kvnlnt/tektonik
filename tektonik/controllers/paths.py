@@ -7,7 +7,8 @@ from flask import jsonify
 from flask import request
 from tektonik.models import db
 from tektonik.models.path import Path as PathModel
-from tektonik.schemas.path import Path as PathSchema
+from tektonik.schemas.path import path_schema
+from tektonik.schemas.path import path_schema_list
 
 blueprint = Blueprint('paths', __name__)
 
@@ -16,8 +17,7 @@ blueprint = Blueprint('paths', __name__)
 def list_paths():
 
     paths = PathModel.query.all()
-    schema = PathSchema(many=True)
-    result, errors = schema.dump(paths)
+    result, errors = path_schema_list.dump(paths)
 
     if errors:
         return jsonify({"result": errors}), 404
@@ -29,8 +29,7 @@ def list_paths():
 def create_path():
     """ create new path """
 
-    schema = PathSchema()
-    result, errors = schema.load(request.json)
+    result, errors = path_schema.load(request.json)
 
     if errors:
         return jsonify({"errors": errors}), 403
@@ -40,7 +39,7 @@ def create_path():
             property_id=result['property_id'])
         db.session.add(record)
         db.session.commit()
-        record = schema.dump(record).data
+        record = path_schema.dump(record).data
         return jsonify(
             {"result":
                 {"record": record,
@@ -51,8 +50,7 @@ def create_path():
 def read_path(id):
 
     record = PathModel.query.get(id)
-    schema = PathSchema()
-    result, errors = schema.dump(record)
+    result, errors = path_schema.dump(record)
 
     if not record:
         return jsonify({"result": "Record not found"}), 404
@@ -64,15 +62,14 @@ def read_path(id):
 def update_path(id):
 
     record = PathModel.query.get(id)
-    schema = PathSchema()
-    result, errors = schema.load(request.json)
+    result, errors = path_schema.load(request.json)
 
     if errors:
         return jsonify({"errors": errors}), 403
     else:
         record.path = result['path']
         db.session.commit()
-        record = schema.dump(record).data
+        record = path_schema.dump(record).data
         return jsonify({"result": record}), 200
 
 
@@ -80,8 +77,7 @@ def update_path(id):
 def delete_path(id):
 
     record = PathModel.query.get(id)
-    schema = PathSchema()
-    result, errors = schema.dump(record)
+    result, errors = path_schema.dump(record)
 
     if not record:
         return jsonify({"result": "Record not found"}), 403

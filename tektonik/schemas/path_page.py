@@ -1,7 +1,7 @@
 from marshmallow import Schema
 # from marshmallow import ValidationError
 from marshmallow import fields
-from tektonik.schemas.page import Page as PageSchema
+from tektonik.schemas.page import page_schema
 # from tektonik.models.path import Path as PathModel
 # from tektonik.models.property import Property as PropertyModel
 # from tektonik.schemas.property import Property as PropertySchema
@@ -11,7 +11,9 @@ class PathPage(Schema):
 
     """ Path schema """
 
-    page = fields.Nested(PageSchema)
+    page = fields.Nested(page_schema)
+
+path_page_schema = PathPage
 
 
 # @Path.validator

@@ -17,6 +17,10 @@ class Property(Schema):
         fields = ('id', 'property')
 
 
+property_schema = Property()
+property_schema_list = Property(many=True)
+
+
 @Property.validator
 def validate_property_min(schema, input_data):
 

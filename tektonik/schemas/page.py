@@ -10,6 +10,8 @@ class Page(Schema):
     id = fields.Integer()
     page = fields.String()
 
+page_schema = Page()
+
 
 @Page.validator
 def validate_page_min(schema, input_data):
