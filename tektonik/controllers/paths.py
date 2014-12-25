@@ -9,6 +9,7 @@ from tektonik.models import db
 from tektonik.models.path import Path as PathModel
 from tektonik.schemas.path import path_schema
 from tektonik.schemas.path import path_schema_list
+from tektonik.schemas.path import path_schema_read
 
 blueprint = Blueprint('paths', __name__)
 
@@ -50,7 +51,7 @@ def create_path():
 def read_path(id):
 
     record = PathModel.query.get(id)
-    result, errors = path_schema.dump(record)
+    result, errors = path_schema_read.dump(record)
 
     if not record:
         return jsonify({"result": "Record not found"}), 404

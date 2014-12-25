@@ -4,7 +4,7 @@ from marshmallow import fields
 from tektonik.models.path import Path as PathModel
 from tektonik.models.property import Property as PropertyModel
 from tektonik.schemas.property import property_schema
-from tektonik.schemas.path_page import path_page_schema
+from tektonik.schemas.path_page import path_page_schema_list
 
 
 class Path(Schema):
@@ -15,11 +15,12 @@ class Path(Schema):
     path = fields.String()
     property = fields.Nested(property_schema)
     property_id = fields.Integer()
-    pages = fields.Nested(path_page_schema, many=True)
+    pages = fields.Nested(path_page_schema_list)
 
 
 path_schema = Path()
 path_schema_list = Path(many=True, only=('id', 'path', 'property'))
+path_schema_read = Path(only=('id', 'path', 'property', 'pages'))
 
 
 @Path.validator

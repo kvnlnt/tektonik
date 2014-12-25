@@ -4,10 +4,10 @@ import os
 from flask.ext.script import Manager, Server
 from tektonik import create_app
 from tektonik.models import db
-from tektonik.models.page import Page
-from tektonik.models.path import Path
-from tektonik.models.path_page import PathPage
-from tektonik.models.property import Property
+from tektonik.models.page import Page as PageModel
+from tektonik.models.path import Path as PathModel
+from tektonik.models.path_page import PathPage as PathPageModel
+from tektonik.models.property import Property as PropertyModel
 from tektonik.schemas.page import Page as PageSchema
 from tektonik.schemas.path import Path as PathSchema
 from tektonik.schemas.path_page import PathPage as PathPageSchema
@@ -30,13 +30,13 @@ def make_shell_context():
 
     return dict(app=app,
                 db=db,
-                Property=Property,
+                PropertyModel=PropertyModel,
                 PropertySchema=PropertySchema,
-                Path=Path,
+                PathModel=PathModel,
                 PathSchema=PathSchema,
-                PathPage=PathPage,
+                PathPageModel=PathPageModel,
                 PathPageSchema=PathPageSchema,
-                Page=Page,
+                PageModel=PageModel,
                 PageSchema=PageSchema)
 
 
