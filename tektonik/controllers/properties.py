@@ -8,6 +8,7 @@ from flask import request
 from tektonik.models import db
 from tektonik.models.property import Property as PropertyModel
 from tektonik.schemas.property import property_schema_list
+from tektonik.schemas.property import property_schema_read
 from tektonik.schemas.property import property_schema
 
 blueprint = Blueprint('properties', __name__)
@@ -48,7 +49,7 @@ def create_property():
 def read_property(id):
 
     record = PropertyModel.query.get(id)
-    result, errors = property_schema.dump(record)
+    result, errors = property_schema_read.dump(record)
 
     if not record:
         return jsonify({"result": "Record not found"}), 404
