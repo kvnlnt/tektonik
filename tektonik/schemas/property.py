@@ -2,7 +2,6 @@ from marshmallow import Schema
 from marshmallow import fields
 from marshmallow import ValidationError
 from tektonik.models.property import Property as PropertyModel
-from tektonik.models import db
 
 
 class Property(Schema):
@@ -12,35 +11,7 @@ class Property(Schema):
     # fields
     id = fields.Integer()
     property = fields.String()
-    stats = fields.Method('get_stats')
-
-    def get_stats(self, obj):
-
-        stats_sql = """
-            SELECT
-                    count(distinct page.id) as total_pages,
-                    count(distinct path.id) as total_paths
-            FROM
-                    properties as property,
-                    paths as path,
-                    path_pages as path_page,
-                    pages as page
-             WHERE
-                    property.id = :id AND
-                    path.property_id = property.id AND
-                    path_page.path_id = path.id AND
-                    path_page.page_id = page.id
-            """
-
-        stats_query = db.engine.execute(stats_sql, id=obj.id)
-        stats_data = stats_query.fetchone()
-
-        result = {
-            'total_paths': stats_data.total_paths,
-            'total_pages': stats_data.total_pages
-        }
-
-        return result
+    stats = fields.Function(PropertyModel.list_stats)
 
     # json fields
     class Meta:
@@ -48,13 +19,8 @@ class Property(Schema):
 
 
 property_schema = Property()
-property_schema_read = Property(
-    only=('id', 'property', 'stats')
-)
-property_schema_list = Property(
-    many=True,
-    only=('id', 'property', 'stats')
-)
+property_schema_read = Property(only=('id', 'property', 'stats'))
+property_schema_list = Property(many=True, only=('id', 'property', 'stats'))
 
 
 @Property.validator

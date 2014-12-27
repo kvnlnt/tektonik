@@ -2,10 +2,8 @@ from marshmallow import fields
 from marshmallow import Schema
 from marshmallow import ValidationError
 from tektonik.models.path import Path as PathModel
-from tektonik.models.path_page import PathPage as PathPageModel
 from tektonik.models.property import Property as PropertyModel
 from tektonik.schemas.property import property_schema
-from tektonik.models import db
 
 
 class Path(Schema):
@@ -16,27 +14,11 @@ class Path(Schema):
     path = fields.String()
     property = fields.Nested(property_schema)
     property_id = fields.Integer()
-    pages = fields.Method("get_pages")
-
-    def get_pages(self, obj):
-        path = db.aliased(PathModel)
-        pages = PathPageModel.query. \
-            join(path, PathModel). \
-            filter(PathPageModel.path_id == obj.id). \
-            filter(path.id == obj.id)
-
-        result = list()
-        for p in pages:
-            result.append({
-                'id': p.page.id,
-                'page': p.page.page
-            })
-
-        return result
+    pages = fields.Function(PathModel.list_pages)
 
 
 path_schema = Path()
-path_schema_list = Path(many=True, only=('id', 'path', 'property'))
+path_schema_list = Path(many=True, only=('id', 'path', 'property', 'pages'))
 path_schema_read = Path(only=('id', 'path', 'property', 'pages'))
 
 
