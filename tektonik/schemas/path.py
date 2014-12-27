@@ -3,7 +3,6 @@ from marshmallow import Schema
 from marshmallow import ValidationError
 from tektonik.models.path import Path as PathModel
 from tektonik.models.property import Property as PropertyModel
-from tektonik.schemas.property import property_schema
 
 
 class Path(Schema):
@@ -12,8 +11,8 @@ class Path(Schema):
 
     id = fields.Integer()
     path = fields.String()
-    property = fields.Nested(property_schema)
     property_id = fields.Integer()
+    property = fields.Function(PathModel.get_property)
     pages = fields.Function(PathModel.list_pages)
 
 

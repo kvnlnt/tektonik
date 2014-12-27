@@ -11,6 +11,28 @@ class Path(db.Model):
     path = db.Column(LowerCaseText(100))
     property_id = db.Column(db.Integer, db.ForeignKey('properties.id'))
 
+    def get_property(self):
+
+        sql = """
+                SELECT
+                    property.id,
+                    property.property
+                FROM
+                    properties as property
+                WHERE
+                    property.id = :id
+            """
+
+        query = db.engine.execute(sql, id=self.property_id)
+        record = query.fetchone()
+
+        result = {
+            'id': record.id,
+            'property': record.property
+        }
+
+        return result
+
     def list_pages(self):
 
         sql = """
@@ -26,10 +48,10 @@ class Path(db.Model):
             """
 
         query = db.engine.execute(sql, id=self.id)
-        rows = query.fetchall()
+        records = query.fetchall()
 
         result = list()
-        for row in rows:
+        for row in records:
             result.append({
                 'id': row.id,
                 'page': row.page
