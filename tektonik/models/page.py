@@ -9,3 +9,8 @@ class Page(db.Model):
     __tablename__ = 'pages'
     id = db.Column(db.Integer, primary_key=True)
     page = db.Column(LowerCaseText(100))
+    paths = db.relationship(
+        'PathPage',
+        backref='path_page',
+        cascade="save-update, merge, delete, delete-orphan"
+    )

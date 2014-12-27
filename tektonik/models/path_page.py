@@ -12,3 +12,4 @@ class PathPage(db.Model):
     effective_date = db.Column(db.DateTime)
     expiration_date = db.Column(db.DateTime)
     page = db.relationship("Page", backref="path_page")
+    path = db.relationship("Path", backref="page_path")

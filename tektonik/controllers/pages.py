@@ -7,7 +7,9 @@ from flask import jsonify
 from flask import request
 from tektonik.models import db
 from tektonik.models.page import Page as PageModel
-from tektonik.schemas.page import Page as PageSchema
+from tektonik.schemas.page import page_schema
+from tektonik.schemas.page import page_schema_read
+from tektonik.schemas.page import page_schema_list
 
 blueprint = Blueprint('pages', __name__)
 
@@ -16,8 +18,7 @@ blueprint = Blueprint('pages', __name__)
 def list_pages():
 
     pages = PageModel.query.all()
-    schema = PageSchema(many=True)
-    result, errors = schema.dump(pages)
+    result, errors = page_schema_list.dump(pages)
 
     if errors:
         return jsonify({"result": errors}), 404
@@ -29,8 +30,7 @@ def list_pages():
 def create_page():
     """ create new page """
 
-    schema = PageSchema()
-    result, errors = schema.load(request.json)
+    result, errors = page_schema.load(request.json)
 
     if errors:
         return jsonify({"errors": errors}), 403
@@ -38,7 +38,7 @@ def create_page():
         record = PageModel(page=result['page'])
         db.session.add(record)
         db.session.commit()
-        record = schema.dump(record).data
+        record = page_schema.dump(record).data
         return jsonify(
             {"result":
                 {"record": record,
@@ -49,8 +49,7 @@ def create_page():
 def read_page(id):
 
     record = PageModel.query.get(id)
-    schema = PageSchema()
-    result, errors = schema.dump(record)
+    result, errors = page_schema_read.dump(record)
 
     if not record:
         return jsonify({"result": "Record not found"}), 404
@@ -62,15 +61,14 @@ def read_page(id):
 def update_page(id):
 
     record = PageModel.query.get(id)
-    schema = PageSchema()
-    result, errors = schema.load(request.json)
+    result, errors = page_schema.load(request.json)
 
     if errors:
         return jsonify({"errors": errors}), 403
     else:
         record.page = result['page']
         db.session.commit()
-        record = schema.dump(record).data
+        record = page_schema.dump(record).data
         return jsonify({"result": record}), 200
 
 
@@ -78,8 +76,7 @@ def update_page(id):
 def delete_page(id):
 
     record = PageModel.query.get(id)
-    schema = PageSchema()
-    result, errors = schema.dump(record)
+    result, errors = page_schema.dump(record)
 
     if not record:
         return jsonify({"result": "Record not found"}), 403
