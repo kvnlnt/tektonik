@@ -17,6 +17,8 @@ blueprint = Blueprint('properties', __name__)
 @blueprint.route("", methods=['GET'])
 def list_properties():
 
+    """ list properties """
+
     properties = PropertyModel.query.all()
     result, errors = property_schema_list.dump(properties)
 
@@ -28,6 +30,7 @@ def list_properties():
 
 @blueprint.route("", methods=['POST'])
 def create_property():
+
     """ create new property """
 
     result, errors = property_schema.load(request.json)
@@ -48,6 +51,8 @@ def create_property():
 @blueprint.route("/<int:id>", methods=['GET'])
 def read_property(id):
 
+    """ get property details """
+
     record = PropertyModel.query.get(id)
     result, errors = property_schema_read.dump(record)
 
@@ -60,7 +65,10 @@ def read_property(id):
 @blueprint.route("/<int:id>", methods=['PUT', 'PATCH'])
 def update_property(id):
 
+    """ update property """
+
     record = PropertyModel.query.get(id)
+    request.json['id'] = id
     result, errors = property_schema.load(request.json)
 
     if errors:
@@ -74,6 +82,8 @@ def update_property(id):
 
 @blueprint.route("/<int:id>", methods=['DELETE'])
 def delete_property(id):
+
+    """ delete property """
 
     record = PropertyModel.query.get(id)
     result, errors = property_schema.dump(record)

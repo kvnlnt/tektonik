@@ -17,6 +17,8 @@ blueprint = Blueprint('pages', __name__)
 @blueprint.route("", methods=['GET'])
 def list_pages():
 
+    """ list pages """
+
     pages = PageModel.query.all()
     result, errors = page_schema_list.dump(pages)
 
@@ -28,6 +30,7 @@ def list_pages():
 
 @blueprint.route("", methods=['POST'])
 def create_page():
+
     """ create new page """
 
     result, errors = page_schema.load(request.json)
@@ -48,6 +51,8 @@ def create_page():
 @blueprint.route("/<int:id>", methods=['GET'])
 def read_page(id):
 
+    """ get page details """
+
     record = PageModel.query.get(id)
     result, errors = page_schema_read.dump(record)
 
@@ -60,7 +65,10 @@ def read_page(id):
 @blueprint.route("/<int:id>", methods=['PUT', 'PATCH'])
 def update_page(id):
 
+    """ update page """
+
     record = PageModel.query.get(id)
+    request.json['id'] = id
     result, errors = page_schema.load(request.json)
 
     if errors:
@@ -74,6 +82,8 @@ def update_page(id):
 
 @blueprint.route("/<int:id>", methods=['DELETE'])
 def delete_page(id):
+
+    """ delete page """
 
     record = PageModel.query.get(id)
     result, errors = page_schema.dump(record)
