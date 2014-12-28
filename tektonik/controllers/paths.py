@@ -7,7 +7,6 @@ from flask import jsonify
 from flask import request
 from tektonik.models import db
 from tektonik.models.path import Path as PathModel
-from tektonik.models.path_page import PathPage as PathPageModel
 from tektonik.schemas.path import path_schema
 from tektonik.schemas.path import path_schema_list
 from tektonik.schemas.path import path_schema_read
@@ -44,7 +43,12 @@ def create_path():
             property_id=result['property_id'])
         db.session.add(record)
         db.session.commit()
-        record = path_schema.dump(record).data
+
+        # if has pages, reset path_page configuration
+        pages = request.json.get('pages', None)
+        record.add_pages(pages)
+        record = path_schema_read.dump(PathModel.query.get(record.id)).data
+
         return jsonify(
             {"result":
                 {"record": record,
@@ -80,18 +84,7 @@ def update_path(id):
 
         # if has pages, reset path_page configuration
         pages = request.json.get('pages', None)
-        if pages:
-            PathPageModel.query.filter(PathPageModel.path_id == id).delete()
-            for page in pages:
-                try:
-                    # XXX
-                    # one user could delete a page while another is
-                    # adding is, thus causing this paths registration to
-                    # this page to be orphaned
-                    new_page = PathPageModel(path_id=id, page_id=page['id'])
-                    db.session.add(new_page)
-                except:
-                    pass
+        record.add_pages(pages, reset=True)
 
         record.path = result['path']
         db.session.commit()
