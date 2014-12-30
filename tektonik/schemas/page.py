@@ -34,3 +34,33 @@ def validate_page_max(schema, input_data):
 
     if len(input_data['page']) > 100:
         raise ValidationError('Page too long (> 100)', 'page')
+
+
+@Page.validator
+def validate_unique_property(schema, input_data):
+
+    # look for property with this name
+    record_exists = PageModel.query.filter_by(
+        page=input_data['page']).first()
+
+    # default an id for easier handling
+    id = input_data.get('id', None)
+
+    # if exists, let's check it out
+    if record_exists:
+
+        # is this an update
+        is_update = True if id is not None else False
+
+        # is new record
+        is_new = not is_update
+
+        # is the id the same as that passed in?
+        is_id_same = record_exists.id == id
+
+        # if this is an update and the id is different, it's a conflict
+        if is_update is True and is_id_same is False:
+            raise ValidationError('Page already exists', 'page')
+
+        if is_new:
+            raise ValidationError('Page already exists', 'page')

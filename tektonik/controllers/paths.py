@@ -43,11 +43,7 @@ def create_path():
             property_id=result['property_id'])
         db.session.add(record)
         db.session.commit()
-
-        # if has pages, reset path_page configuration
-        pages = request.json.get('pages', None)
-        record.add_pages(pages)
-        record = path_schema_read.dump(PathModel.query.get(record.id)).data
+        record = path_schema_read.dump(record).data
 
         return jsonify(
             {"result":
@@ -87,6 +83,7 @@ def update_path(id):
         record.add_pages(pages, reset=True)
 
         record.path = result['path']
+        record.property_id = result['property_id']
         db.session.commit()
         record = path_schema.dump(PathModel.query.get(id)).data
         return jsonify({"result": record}), 200

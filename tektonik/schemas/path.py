@@ -18,7 +18,8 @@ class Path(Schema):
 
 path_schema = Path()
 path_schema_list = Path(many=True, only=('id', 'path', 'property', 'pages'))
-path_schema_read = Path(only=('id', 'path', 'property', 'pages'))
+path_schema_read = Path(
+    only=('id', 'path', 'property_id', 'property', 'pages'))
 
 
 @Path.validator

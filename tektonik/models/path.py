@@ -17,17 +17,19 @@ class Path(db.Model):
         if reset:
             PathPageModel.query.filter(
                 PathPageModel.path_id == self.id).delete()
-        for page in pages:
-            try:
-                # XXX
-                # really should verify if page exists before adding
-                new_page = PathPageModel(
-                    path_id=self.id, page_id=page['id'])
-                db.session.add(new_page)
-            except:
-                pass
 
-        db.session.commit()
+        if pages:
+            for page in pages:
+                try:
+                    # XXX
+                    # really should verify if page exists before adding
+                    new_page = PathPageModel(
+                        path_id=self.id, page_id=page['id'])
+                    db.session.add(new_page)
+                except:
+                    pass
+
+            db.session.commit()
 
     def get_property(self):
 
@@ -55,6 +57,7 @@ class Path(db.Model):
 
         sql = """
                 SELECT
+                        path_page.id as path_page_id,
                         page.id,
                         page.page
                 FROM
@@ -72,7 +75,8 @@ class Path(db.Model):
         for row in records:
             result.append({
                 'id': row.id,
-                'page': row.page
+                'page': row.page,
+                'path_page_id': row.path_page_id
             })
 
         return result

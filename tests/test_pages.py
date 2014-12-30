@@ -43,7 +43,7 @@ class TestURLs:
         assert response.status_code == 200
 
     def test_create_page(self):
-        data = '{"page":"test page"}'
+        data = '{"page":"brand new page"}'
         response = self.app.post(self.prefix, data=data, headers=self.headers)
         assert response.status_code == 201
 

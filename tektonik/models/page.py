@@ -8,7 +8,7 @@ class Page(db.Model):
 
     __tablename__ = 'pages'
     id = db.Column(db.Integer, primary_key=True)
-    page = db.Column(LowerCaseText(100))
+    page = db.Column(LowerCaseText(100), unique=True)
 
     def list_paths(self):
 
