@@ -42,4 +42,4 @@ def validate_path_page_unique(schema, input_data):
     # if exists, let's check it out
     if record_exists:
         raise ValidationError(
-            'Page already belongs to path', 'path_id')
+            'Page already belongs to path', 'page_id')
