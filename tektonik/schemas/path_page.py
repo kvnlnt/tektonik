@@ -22,12 +22,16 @@ def validate_path_page_exists(schema, input_data):
 
     path_id = input_data.get('path_id', None)
     page_id = input_data.get('page_id', None)
-    page = PageModel.query.get(page_id)
+
+    if page_id is None or page_id == '':
+        page = None
+    else:
+        page = PageModel.query.get(page_id)
 
     if path_id is None:
         raise ValidationError('Path is required', 'path_id')
 
-    if not page:
+    if page is None:
         raise ValidationError('Page not found', 'page_id')
 
 
