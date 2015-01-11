@@ -15,7 +15,6 @@ class Page(Schema):
 
 page_schema = Page()
 page_schema_list = Page(many=True, only=('id', 'page', 'paths'))
-page_schema_search = Page(many=True, only=('id', 'page'))
 page_schema_read = Page(only=('id', 'page', 'paths'))
 
 

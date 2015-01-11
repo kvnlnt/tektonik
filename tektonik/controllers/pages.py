@@ -10,7 +10,6 @@ from tektonik.models.page import Page as PageModel
 from tektonik.schemas.page import page_schema
 from tektonik.schemas.page import page_schema_read
 from tektonik.schemas.page import page_schema_list
-from tektonik.schemas.page import page_schema_search
 
 blueprint = Blueprint('pages', __name__)
 
@@ -29,15 +28,14 @@ def list_pages():
         return jsonify({"result": result}), 200
 
 
-@blueprint.route("/search/<string:term>", methods=['GET'])
-def search_pages(term=''):
+@blueprint.route("/search", methods=['POST'])
+def search_pages():
 
     """ search for a page """
 
-    records = PageModel.query. \
-        filter(PageModel.page.like("%" + term + "%")).all()
-    result, errors = page_schema_search.dump(records)
-
+    pages = PageModel.query. \
+        filter(PageModel.page.like("%" + request.json['page'] + "%")).all()
+    result, errors = page_schema_list.dump(pages)
     if errors:
         return jsonify({"result": errors}), 404
     else:
