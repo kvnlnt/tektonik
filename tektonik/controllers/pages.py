@@ -21,11 +21,12 @@ def list_pages():
 
     pages = PageModel.query.all()
     result, errors = page_schema_list.dump(pages)
+    metadata = {"total_records": PageModel.query.count()}
 
     if errors:
         return jsonify({"result": errors}), 404
     else:
-        return jsonify({"result": result}), 200
+        return jsonify({"result": result, "metadata": metadata}), 200
 
 
 @blueprint.route("/search", methods=['POST'])

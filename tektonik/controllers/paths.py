@@ -21,11 +21,12 @@ def list_paths():
 
     paths = PathModel.query.all()
     result, errors = path_schema_list.dump(paths)
+    metadata = {"total_records": PathModel.query.count()}
 
     if errors:
         return jsonify({"result": errors}), 404
     else:
-        return jsonify({"result": result}), 200
+        return jsonify({"result": result, "metadata": metadata}), 200
 
 
 @blueprint.route("", methods=['POST'])

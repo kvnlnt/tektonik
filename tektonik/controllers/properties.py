@@ -21,11 +21,12 @@ def list_properties():
 
     properties = PropertyModel.query.all()
     result, errors = property_schema_list.dump(properties)
+    metadata = {"total_records": PropertyModel.query.count()}
 
     if errors:
         return jsonify({"result": errors}), 404
     else:
-        return jsonify({"result": result}), 200
+        return jsonify({"result": result, "metadata": metadata}), 200
 
 
 @blueprint.route("", methods=['POST'])
