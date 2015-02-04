@@ -14,6 +14,7 @@ class Page(db.Model):
 
         sql = """
                 SELECT
+                        path_page.id as path_page_id,
                         path.id,
                         path.path
                 FROM
@@ -31,7 +32,8 @@ class Page(db.Model):
         for row in rows:
             result.append({
                 'id': row.id,
-                'path': row.path
+                'path': row.path,
+                'path_page_id': row.path_page_id
             })
 
         return result
