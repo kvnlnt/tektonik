@@ -1,3 +1,4 @@
+import arrow
 from marshmallow import fields
 from marshmallow import Schema
 from marshmallow import ValidationError
@@ -12,9 +13,26 @@ class PathPage(Schema):
     id = fields.Integer()
     path_id = fields.Integer()
     page_id = fields.Integer()
+    is_persistent = fields.Boolean(default=True)
+    effective_date = fields.DateTime(default=arrow.utcnow().isoformat())
+    expiration_date = fields.DateTime(
+        default=arrow.utcnow().replace(years=+100).isoformat())
 
 
 path_page_schema = PathPage()
+path_page_schema_list = PathPage(
+    many=True, only=('id', 'path_id', 'page_id', 'is_persistent',
+                     'effective_date', 'expiration_date'))
+
+
+@PathPage.data_handler
+def serialize_effective_date(serializer, records, instances):
+    for record in records:
+        record['effective_date'] = arrow.get(
+            record['effective_date']).humanize()
+        record['expiration_date'] = arrow.get(
+            record['expiration_date']).humanize()
+    return records
 
 
 @PathPage.validator

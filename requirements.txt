@@ -1,4 +1,5 @@
 Flask==0.10.1
+arrow
 
 # Extensions
 Flask-SQLAlchemy==1.0
