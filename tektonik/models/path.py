@@ -1,3 +1,4 @@
+import arrow
 from tektonik.types import LowerCaseText
 from tektonik.models import db
 from tektonik.models.path_page import PathPage as PathPageModel
@@ -58,6 +59,8 @@ class Path(db.Model):
         sql = """
                 SELECT
                         path_page.id as path_page_id,
+                        path_page.effective_date,
+                        path_page.expiration_date,
                         page.id,
                         page.page
                 FROM
@@ -73,10 +76,16 @@ class Path(db.Model):
 
         result = list()
         for row in records:
+
+            effective_date = arrow.get(row.effective_date).humanize()
+            expiration_date = arrow.get(row.expiration_date).humanize()
+
             result.append({
                 'id': row.id,
                 'page': row.page,
-                'path_page_id': row.path_page_id
+                'path_page_id': row.path_page_id,
+                'effective_date': effective_date,
+                'expiration_date': expiration_date
             })
 
         return result
