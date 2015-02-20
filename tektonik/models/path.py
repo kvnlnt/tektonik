@@ -77,15 +77,22 @@ class Path(db.Model):
         result = list()
         for row in records:
 
-            effective_date = arrow.get(row.effective_date).humanize()
-            expiration_date = arrow.get(row.expiration_date).humanize()
+            effective_date_humanized = arrow.get(row.effective_date).humanize()
+
+            if row.expiration_date:
+                expiration_date_humanized = arrow.get(
+                    row.expiration_date).humanize()
+            else:
+                expiration_date_humanized = 'Never'
 
             result.append({
                 'id': row.id,
                 'page': row.page,
                 'path_page_id': row.path_page_id,
-                'effective_date': effective_date,
-                'expiration_date': expiration_date
+                'effective_date': row.effective_date,
+                'effective_date_humanized': effective_date_humanized,
+                'expiration_date': row.expiration_date,
+                'expiration_date_humanized': expiration_date_humanized
             })
 
         return result

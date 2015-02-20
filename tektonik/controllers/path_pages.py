@@ -8,6 +8,7 @@ from flask import request
 from tektonik.models import db
 from tektonik.models.path_page import PathPage as PathPageModel
 from tektonik.schemas.path_page import path_page_schema, path_page_schema_list
+from tektonik.util import remove_empty_values
 
 blueprint = Blueprint('path_pages', __name__)
 
@@ -17,17 +18,18 @@ def create_path_page():
 
     """ create new path """
 
-    result, errors = path_page_schema.load(request.json)
+    # serialize
+    result, errors = path_page_schema.load(remove_empty_values(request.json))
 
     if errors:
         return jsonify({"errors": errors}), 403
     else:
         record = PathPageModel(
-            path_id=result['path_id'],
-            page_id=result['page_id'],
-            is_persistent=result['is_persistent'],
-            effective_date=result['effective_date'],
-            expiration_date=result['expiration_date'])
+            path_id=result.get('path_id'),
+            page_id=result.get('page_id'),
+            is_persistent=result.get('is_persistent'),
+            effective_date=result.get('effective_date'),
+            expiration_date=result.get('expiration_date', None))
         db.session.add(record)
         db.session.commit()
         record = path_page_schema.dump(record).data
